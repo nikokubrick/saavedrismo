@@ -1,0 +1,37 @@
+name: Publicar descargas
+
+on:
+  push:
+    branches: [ archivos ]
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unir los archivos grandes (vienen partidos en 90 MB)
+        run: |
+          set -e
+          mkdir -p /tmp/sub
+          for f in *; do
+            [ -f "$f" ] || continue
+            case "$f" in
+              *.parte-*) b="${f%.parte-*}"; [ -f "/tmp/sub/$b" ] || cat "$b".parte-* > "/tmp/sub/$b" ;;
+              *.md|*.txt) ;;
+              *) cp "$f" /tmp/sub/ ;;
+            esac
+          done
+          cd /tmp/sub && ls -la && sha256sum * 
+          [ -f "$GITHUB_WORKSPACE/sha256.txt" ] && sha256sum -c "$GITHUB_WORKSPACE/sha256.txt"
+      - name: Crear la release "descargas"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete descargas --cleanup-tag -y -R "$GITHUB_REPOSITORY" || true
+          sleep 3
+          gh release create descargas /tmp/sub/* -R "$GITHUB_REPOSITORY" --target main \
+            --title "Descargas" \
+            --notes "Instrumentos y plugins de Saavedrismo. Instrucciones y descripción de cada uno en https://nikokubrick.github.io/saavedrismo/"
