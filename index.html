@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saavedrismo · instrumentos y plugins gratis</title>
+<meta name="description" content="Instrumentos y plugins de audio gratis para Windows y Mac: Lirio (máquina de acordes), Niebla Studio (sintetizador ambiental) y cuatro efectos para mezclar.">
+<meta property="og:title" content="Saavedrismo · instrumentos y plugins gratis">
+<meta property="og:description" content="Lirio, Niebla Studio, Bowery NY Crush, Desarmador, Hurlingham 810 y Latex Board. Para Windows y Mac.">
+<meta property="og:image" content="img/lirio.webp">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%23f6b40e'/%3E%3Cg stroke='%23f6b40e' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M16 2v4M16 26v4M2 16h4M26 16h4M6 6l3 3M23 23l3 3M6 26l3-3M23 9l3-3'/%3E%3C/g%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"Archivo";src:url("fonts/archivo.woff2") format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+:root{
+  --celeste:#74acdf;      /* el celeste de la bandera */
+  --cielo:#eaf2fa;        /* fondo: cielo claro */
+  --cielo-2:#d9e7f5;
+  --tinta:#13213c;        /* azul noche */
+  --tinta-2:#3c4d6b;
+  --sol:#f6b40e;          /* el sol: solo para descargar */
+  --sol-osc:#c98f00;
+  --mar:#0f5c8c;          /* Mediterráneo: enlaces */
+  --blanco:#ffffff;
+  --w-cont:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--cielo);color:var(--tinta);font-family:"Archivo",system-ui,sans-serif;font-size:18px;line-height:1.55;font-stretch:100%;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--mar);text-underline-offset:.18em}
+a:focus-visible,button:focus-visible{outline:3px solid var(--tinta);outline-offset:3px;border-radius:6px}
+.cont{max-width:var(--w-cont);margin:0 auto;padding:0 24px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- cabecera ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+.marca{display:flex;align-items:center;gap:10px;font-weight:800;font-stretch:125%;font-size:20px;color:var(--tinta);text-decoration:none;letter-spacing:-.01em}
+.marca svg{width:28px;height:28px}
+.top nav{display:flex;gap:22px;font-size:16px}
+.top nav a{color:var(--tinta);text-decoration:none;font-weight:500}
+.top nav a:hover{text-decoration:underline}
+
+/* ---------- portada ---------- */
+.hero{padding:56px 0 40px;display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:56px;align-items:end}
+.hero h1{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(34px,9.6vw,96px);line-height:.92;letter-spacing:-.035em}
+.hero p{margin:28px 0 0;max-width:34em;font-size:20px;color:var(--tinta-2)}
+.ruta{display:flex;align-items:center;gap:12px;margin-top:28px;font-size:15px;color:var(--tinta-2)}
+.ruta span{font-weight:700;color:var(--tinta)}
+.ruta i{flex:0 0 64px;height:2px;background:repeating-linear-gradient(90deg,var(--tinta) 0 6px,transparent 6px 11px)}
+
+/* índice: el estante */
+.estante{background:var(--blanco);border-radius:18px;padding:8px 0;box-shadow:0 1px 0 var(--cielo-2),0 18px 40px -24px rgba(19,33,60,.35)}
+.estante h2{font-size:15px;font-weight:600;color:var(--tinta-2);margin:12px 24px 4px}
+.estante ul{list-style:none;margin:0;padding:0}
+.estante li a{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 24px;text-decoration:none;color:var(--tinta);border-top:1px solid var(--cielo)}
+.estante li a:hover{background:var(--cielo)}
+.estante b{font-weight:800;font-stretch:112%;font-size:18px}
+.estante small{grid-column:1;font-size:14.5px;color:var(--tinta-2)}
+.estante em{grid-row:1/3;grid-column:2;align-self:center;font-style:normal;font-size:13px;color:var(--tinta-2);text-align:right;line-height:1.35}
+
+/* ---------- grupos ---------- */
+.grupo{padding:72px 0 8px}
+.grupo>.cont>h2{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(32px,4.4vw,52px);letter-spacing:-.025em;line-height:1}
+.grupo>.cont>p{margin:14px 0 0;max-width:40em;color:var(--tinta-2)}
+
+/* ---------- ficha de cada programa ---------- */
+.ficha{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:start;padding:56px 0;border-bottom:2px solid var(--cielo-2)}
+.ficha:last-child{border-bottom:0}
+.pantalla{margin:0;position:sticky;top:24px}
+.pantalla img{border-radius:12px;box-shadow:0 30px 60px -30px rgba(19,33,60,.55),0 0 0 1px rgba(19,33,60,.08)}
+.pantalla figcaption{font-size:14px;color:var(--tinta-2);margin-top:10px}
+.ficha h3{margin:0;font-weight:900;font-stretch:118%;font-size:clamp(34px,4vw,48px);line-height:1;letter-spacing:-.03em}
+.ficha .que{margin:10px 0 0;font-size:20px;font-weight:600;color:var(--tinta)}
+.ficha .desc{margin:16px 0 0;color:var(--tinta-2)}
+.ficha ul.trae{margin:18px 0 0;padding:0;list-style:none}
+.ficha ul.trae li{padding:7px 0 7px 26px;position:relative;font-size:16.5px;border-top:1px solid var(--cielo-2)}
+.ficha ul.trae li::before{content:"";position:absolute;left:4px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--celeste);box-shadow:0 0 0 2px var(--tinta) inset}
+.sistemas{margin:18px 0 0;font-size:15px;color:var(--tinta-2)}
+.sistemas strong{color:var(--tinta)}
+
+/* descargas: lo único con el amarillo del sol */
+.bajar{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn{display:inline-flex;flex-direction:column;gap:1px;min-width:200px;padding:13px 20px 12px;border-radius:12px;background:var(--sol);color:var(--tinta);text-decoration:none;box-shadow:0 3px 0 var(--sol-osc);transition:transform .08s,box-shadow .08s}
+.btn:hover{background:#ffc22e}
+.btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--sol-osc)}
+.btn b{font-size:17px;font-weight:800;font-stretch:110%}
+.btn span{font-size:13.5px;font-weight:500;opacity:.85}
+.btn.sec{background:var(--blanco);box-shadow:0 0 0 2px var(--tinta) inset}
+.btn.sec:hover{background:var(--cielo)}
+.btn.sec:active{transform:translateY(1px)}
+.nota{margin-top:14px;font-size:14.5px;color:var(--tinta-2)}
+
+/* ---------- instalar ---------- */
+.instalar{background:var(--tinta);color:var(--cielo);margin-top:72px;padding:72px 0}
+.instalar h2{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(32px,4.4vw,52px);letter-spacing:-.025em;line-height:1;color:var(--blanco)}
+.instalar>.cont>p{max-width:42em;margin:16px 0 0;color:#c4d4e8}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:40px}
+.dos h3{margin:0 0 6px;font-size:24px;font-weight:800;font-stretch:115%;color:var(--blanco)}
+.dos ol{margin:0;padding:0;list-style:none;counter-reset:p}
+.dos li{counter-increment:p;position:relative;padding:14px 0 14px 52px;border-top:1px solid rgba(234,242,250,.15);color:#dbe6f3;font-size:17px}
+.dos li::before{content:counter(p);position:absolute;left:0;top:12px;width:34px;height:34px;border-radius:50%;background:var(--celeste);color:var(--tinta);font-weight:800;display:grid;place-items:center;font-size:16px}
+.dos code{font-size:14px;background:rgba(234,242,250,.1);padding:2px 6px;border-radius:5px;color:var(--blanco);word-break:break-word}
+.dos strong{color:var(--blanco)}
+
+/* ---------- pie ---------- */
+footer{padding:56px 0 64px}
+footer .cont{display:grid;grid-template-columns:1.2fr 1fr;gap:48px}
+footer h2{margin:0 0 10px;font-size:22px;font-weight:800;font-stretch:115%}
+footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
+.cafe{display:inline-block;margin-top:6px;font-weight:700}
+
+/* ---------- celular ---------- */
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;gap:40px;padding-top:28px}
+  .ficha{grid-template-columns:1fr;gap:28px;padding:44px 0}
+  .pantalla{position:static}
+  .dos,footer .cont{grid-template-columns:1fr;gap:32px}
+}
+@media (max-width:560px){
+  body{font-size:17px}
+  .cont{padding:0 16px}
+  .top nav{display:none}
+  .hero p{font-size:18px}
+  .btn{flex:1 1 100%}
+  .estante li a{padding:12px 16px}
+  .estante h2{margin-left:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="cont">
+  <header class="top">
+    <a class="marca" href="#">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="8.5" fill="#f6b40e"/><g stroke="#f6b40e" stroke-width="2.4" stroke-linecap="round"><path d="M16 2v4M16 26v4M2 16h4M26 16h4M6 6l3 3M23 23l3 3M6 26l3-3M23 9l3-3"/></g></svg>
+      Saavedrismo
+    </a>
+    <nav aria-label="Secciones">
+      <a href="#instrumentos">Instrumentos</a>
+      <a href="#efectos">Efectos</a>
+      <a href="#instalar">Cómo instalar</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Instrumentos y plugins para hacer música. Gratis.</h1>
+      <p>Los hago yo, Nico Saavedra: músico y técnico informático. Son herramientas que necesitaba para grabar mis canciones y que ahora podés bajar, usar y compartir.</p>
+      <div class="ruta" aria-label="De Hurlingham a Mallorca"><span>Hurlingham</span><i></i><span>Mallorca</span></div>
+    </div>
+    <nav class="estante" aria-label="Todos los programas">
+      <h2>Lo que hay para bajar</h2>
+      <ul>
+        <li><a href="#lirio"><b>Lirio</b><small>Máquina de acordes</small><em>Windows<br>Mac</em></a></li>
+        <li><a href="#niebla"><b>Niebla Studio</b><small>Sintetizador ambiental</small><em>Windows<br>Mac</em></a></li>
+        <li><a href="#bowery"><b>Bowery NY Crush</b><small>Compresor paralelo</small><em>Windows</em></a></li>
+        <li><a href="#desarmador"><b>Desarmador</b><small>Separa una batería grabada con un micrófono</small><em>Windows</em></a></li>
+        <li><a href="#hurlingham"><b>Hurlingham 810</b><small>Equipo valvular de bajo</small><em>Windows</em></a></li>
+        <li><a href="#latex"><b>Latex Board</b><small>Pedalera de guitarra</small><em>Windows</em></a></li>
+      </ul>
+    </nav>
+  </section>
+</div>
+
+<section class="grupo" id="instrumentos" aria-labelledby="t-inst">
+  <div class="cont">
+    <h2 id="t-inst">Instrumentos</h2>
+    <p>Para tocar con un teclado MIDI o con el mouse. Funcionan solos, como programa, y Lirio también adentro de tu DAW.</p>
+
+    <article class="ficha" id="lirio">
+      <figure class="pantalla">
+        <img src="img/lirio.webp" width="1080" height="908" alt="Interfaz de Lirio: colores psicodélicos, grilla de tipos de acorde, knobs con forma de flor y caja de ritmos abajo">
+      </figure>
+      <div>
+        <h3>Lirio</h3>
+        <p class="que">Una máquina de acordes: cada tecla toca un acorde completo.</p>
+        <p class="desc">Elegís la tonalidad y Lirio arma los acordes que pertenecen a la escala, o elegís vos el tipo de acorde. Con una mano tocás progresiones enteras, en bloque, rasgueadas como una guitarra o arpegiadas al tempo.</p>
+        <ul class="trae">
+          <li>Nueve tipos de acorde, que cambiás con el teclado de la compu (Q, W, E, A, S, D, Z, X, C) o con las teclas más graves del teclado MIDI</li>
+          <li>Acorde, strum, slop, arpegio y arpa</li>
+          <li>Tres sonidos: sintetizador analógico, FM y piano eléctrico, con bajo aparte</li>
+          <li>Chorus, delay, reverb y caja de ritmos de 16 pasos</li>
+          <li>Graba tus ideas en WAV con un botón</li>
+        </ul>
+        <p class="sistemas"><strong>Windows:</strong> plugin VST3 y programa independiente. <strong>Mac:</strong> plugin AU y VST3 (Ableton, Logic, GarageBand…) y programa independiente. Mac con chip M o Intel.</p>
+        <div class="bajar">
+          <a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Lirio-Instalador-1.4.exe" download><b>Descargar para Windows</b><span>Instalador, 6,5 MB</span></a>
+          <a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Lirio-1.4-Mac.zip" download><b>Descargar para Mac</b><span>Zip, 8,2 MB</span></a>
+        </div>
+        <p class="nota">Versión 1.4. Software libre (GPLv3): <a href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Lirio-1.4-codigo-fuente.zip">código fuente</a>.</p>
+      </div>
+    </article>
+
+    <article class="ficha" id="niebla">
+      <figure class="pantalla">
+        <img src="img/niebla.webp" width="1240" height="880" alt="Interfaz de Niebla Studio: panel de sintetizador oscuro sobre madera, pantalla verde con ondas, botones de acordes y mesa de mezcla con trece canales">
+      </figure>
+      <div>
+        <h3>Niebla Studio</h3>
+        <p class="que">Un sintetizador de ambientes: acordes que quedan flotando, texturas y una mesa de mezcla.</p>
+        <p class="desc">Tocás un acorde y Niebla lo deja sonando como un colchón, con cinta, eco y una reverb enorme. Encima sumás capas que reaccionan a lo que suena, y mezclás todo como en una consola.</p>
+        <ul class="trae">
+          <li>Arco: violín y voces que se tocan arrastrando, siempre dentro de la escala, con looper</li>
+          <li>Polilla: una caja de música que repite una melodía y se va gastando como una cinta vieja</li>
+          <li>Engranaje: arpegiador que recorre el acorde que suena, a tempo</li>
+          <li>Congelador: grabás tu voz o tu instrumento y lo convierte en una nube de sonido</li>
+          <li>Teclado MIDI con pianos, Rhodes, Wurlitzer, órgano y más; vocoder de 16 bandas</li>
+          <li>Mesa de mezcla con trece canales, asignación de knobs MIDI y grabación en WAV</li>
+        </ul>
+        <p class="sistemas">Programa independiente para <strong>Windows</strong> (64 bits) y <strong>Mac</strong> (chip M o Intel, macOS 12 o más nuevo).</p>
+        <div class="bajar">
+          <a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Niebla-Studio-Instalador-1.0.1.exe" download><b>Descargar para Windows</b><span>Instalador, 115 MB</span></a>
+          <a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Niebla-Studio-1.0.1-Mac.zip" download><b>Descargar para Mac</b><span>Zip, 224 MB</span></a>
+        </div>
+        <p class="nota">Versión 1.0.1. Usá auriculares si vas a cantarle o tocarle con micrófono.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="grupo" id="efectos" aria-labelledby="t-efe">
+  <div class="cont">
+    <h2 id="t-efe">Efectos para mezclar</h2>
+    <p>Plugins VST3 para Windows (64 bits). Funcionan en Cakewalk/Sonar, Reaper, Ableton, FL Studio, Studio One y cualquier DAW que cargue VST3. Cada zip trae el plugin y un LEEME con los controles.</p>
+
+    <article class="ficha" id="bowery">
+      <figure class="pantalla">
+        <img src="img/bowery.webp" width="860" height="506" alt="Interfaz de Bowery NY Crush: silueta de una ciudad al atardecer, vúmetro analógico y knobs rojos y grises">
+      </figure>
+      <div>
+        <h3>Bowery NY Crush</h3>
+        <p class="que">Compresor paralelo: suma por debajo una copia aplastada de la señal.</p>
+        <p class="desc">La técnica de compresión "Nueva York" en un solo plugin: la señal original pasa intacta y vos decidís cuánto de la versión aplastada le sumás. La batería crece, la sala respira y los golpes no se pierden.</p>
+        <ul class="trae">
+          <li>Crush, attack, release y ratio, con vúmetro de reducción</li>
+          <li>Saturación, realce de graves y de agudos solo sobre lo aplastado</li>
+          <li>Presets para batería, bajo, guitarra y voz</li>
+        </ul>
+        <div class="bajar"><a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/BoweryNYCrush-VST3-Windows.zip" download><b>Descargar para Windows</b><span>VST3, 0,8 MB</span></a></div>
+      </div>
+    </article>
+
+    <article class="ficha" id="desarmador">
+      <figure class="pantalla">
+        <img src="img/desarmador.webp" width="900" height="480" alt="Interfaz de Desarmador: plano azul de un kit de batería visto desde arriba y panel de knobs amarillos">
+      </figure>
+      <div>
+        <h3>Desarmador</h3>
+        <p class="que">Separa una batería grabada con un solo micrófono en bombo, redoblante, toms y platillos.</p>
+        <p class="desc">Duplicás la pista, ponés Desarmador en cada copia y elegís en el plano qué pieza querés. Detecta cada golpe y deja pasar solo esa pieza, así podés ecualizarla, comprimirla o subirla por separado.</p>
+        <ul class="trae">
+          <li>Sensibilidad, afinación, decay y sangrado para cada pieza</li>
+          <li>Botón para escuchar lo que se descarta y ajustar sin perder nada</li>
+          <li>No usa inteligencia artificial: cuando dos piezas suenan juntas, se filtran un poco entre sí</li>
+        </ul>
+        <div class="bajar"><a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Desarmador-VST3-Windows.zip" download><b>Descargar para Windows</b><span>VST3, 0,8 MB</span></a></div>
+      </div>
+    </article>
+
+    <article class="ficha" id="hurlingham">
+      <figure class="pantalla">
+        <img src="img/hurlingham.webp" width="900" height="520" alt="Interfaz de Hurlingham 810: frente bordó con cuatro válvulas encendidas, panel crema de knobs negros y una caja de ocho parlantes">
+      </figure>
+      <div>
+        <h3>Hurlingham 810</h3>
+        <p class="que">Un equipo valvular de bajo para rock pesado: preamp, ecualizador, distorsión y caja 8x10.</p>
+        <p class="desc">Para grabar el bajo directo a la placa y que suene a ampli empujado: grave firme y un medio granulado que corta la mezcla. La distorsión trabaja solo sobre los medios, así el grave nunca se ensucia.</p>
+        <ul class="trae">
+          <li>Input, bass, middle con cinco frecuencias, treble y grit</li>
+          <li>Ultra lo, ultra hi, mezcla con la señal limpia (DI) y simulación de caja 8x10</li>
+          <li>Presets: clásico, gordo, sucio y denso en Re</li>
+        </ul>
+        <div class="bajar"><a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Hurlingham810-VST3-Windows.zip" download><b>Descargar para Windows</b><span>VST3, 0,8 MB</span></a></div>
+      </div>
+    </article>
+
+    <article class="ficha" id="latex">
+      <figure class="pantalla">
+        <img src="img/latex.webp" width="980" height="480" alt="Interfaz de Latex Board: cuatro pedales de colores (celeste, naranja, violeta y verde) sobre madera">
+      </figure>
+      <div>
+        <h3>Latex Board</h3>
+        <p class="que">Una pedalera de guitarra psicodélica: sustain, overdrive, vibe y eco de cinta.</p>
+        <p class="desc">Cuatro pedales en cadena y un ampli limpio con caja 2x15, para grabar la guitarra directo. El overdrive mezcla señal limpia con la saturada y el eco se estira como una cinta cuando le movés el tiempo.</p>
+        <ul class="trae">
+          <li>Sustain: compresor para más sostén en solos y limpios</li>
+          <li>Grit: overdrive transparente; Vibe: chorus o vibrato de fotoceldas</li>
+          <li>Eco de cinta con repeticiones oscuras que se ensucian</li>
+          <li>Presets: riff, solo, psicodélico y limpio con vibe</li>
+        </ul>
+        <div class="bajar"><a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/LatexBoard-VST3-Windows.zip" download><b>Descargar para Windows</b><span>VST3, 0,8 MB</span></a></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="instalar" id="instalar" aria-labelledby="t-ins">
+  <div class="cont">
+    <h2 id="t-ins">Cómo instalar</h2>
+    <p>Los programas no tienen una firma digital paga, así que la primera vez Windows y macOS te van a avisar que no conocen al desarrollador. Es normal con cualquier programa sin firma; se destraba una sola vez.</p>
+    <div class="dos">
+      <div>
+        <h3>Windows</h3>
+        <ol>
+          <li><strong>Instaladores (Lirio y Niebla):</strong> abrí el .exe. Si aparece "Windows protegió su PC", tocá "Más información" y después "Ejecutar de todas formas".</li>
+          <li><strong>Plugins en zip:</strong> descomprimí y copiá la carpeta que termina en <code>.vst3</code> en <code>C:\Program Files\Common Files\VST3\</code></li>
+          <li>Abrí tu DAW y buscá plugins nuevos. Aparecen con el fabricante Saavedrismo.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Mac</h3>
+        <ol>
+          <li>Descomprimí el zip con doble clic, en la Mac.</li>
+          <li>Hacé clic derecho sobre <code>destrabar.command</code> y elegí Abrir. En macOS 15 o más nuevo: Ajustes del Sistema, Privacidad y seguridad, "Abrir igualmente".</li>
+          <li>Se abre una ventana que instala todo en su lugar. Cuando dice "Listo", cerrala.</li>
+          <li>En Ableton: Preferencias, Plug-Ins, activá Audio Units y tocá Reescanear.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="cont">
+    <div>
+      <h2>Sobre Saavedrismo</h2>
+      <p>Saavedrismo es mi proyecto de tecnología, música y migración: soy argentino, vivo en Mallorca, toco, grabo y arreglo computadoras. Estas herramientas son gratis y se pueden compartir.</p>
+      <p><a href="https://nicosaavedra.tech">nicosaavedra.tech</a></p>
+    </div>
+    <div>
+      <h2>Si te sirvieron</h2>
+      <p>Contame qué hiciste con ellas o avisame si algo no anda, con una captura del error. Y si querés bancar el proyecto:</p>
+      <a class="cafe" href="https://paypal.me/NICOLASSAAVEDRA562/4EUR">Invitame un café</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
