@@ -91,8 +91,19 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--tinta);outline-offs
 .btn.sec:active{transform:translateY(1px)}
 .nota{margin-top:14px;font-size:14.5px;color:var(--tinta-2)}
 
+
+/* ---------- mi música ---------- */
+.musica{padding:72px 0 0}
+.musica-link{display:flex;align-items:flex-end;justify-content:space-between;gap:24px 40px;flex-wrap:wrap;padding:44px 48px;border-radius:24px;background:var(--celeste);color:var(--tinta);text-decoration:none;box-shadow:0 6px 0 var(--tinta)}
+.musica-link:hover{background:#86b9e6}
+.musica-link:active{transform:translateY(4px);box-shadow:0 2px 0 var(--tinta)}
+.musica-txt{display:flex;flex-direction:column;gap:12px}
+.musica-t{font-weight:900;font-stretch:125%;font-size:clamp(38px,5.6vw,72px);line-height:.95;letter-spacing:-.03em}
+.musica-s{font-size:19px;font-weight:500}
+.musica-url{font-weight:800;font-size:20px;background:var(--blanco);padding:12px 20px;border-radius:12px;text-decoration:underline;text-underline-offset:.2em}
+.instalar{margin-top:72px}
 /* ---------- instalar ---------- */
-.instalar{background:var(--tinta);color:var(--cielo);margin-top:72px;padding:72px 0}
+.instalar{background:var(--tinta);color:var(--cielo);padding:72px 0}
 .instalar h2{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(32px,4.4vw,52px);letter-spacing:-.025em;line-height:1;color:var(--blanco)}
 .instalar>.cont>p{max-width:42em;margin:16px 0 0;color:#c4d4e8}
 .dos{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:40px}
@@ -119,6 +130,8 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
   .dos,footer .cont{grid-template-columns:1fr;gap:32px}
 }
 @media (max-width:560px){
+  .musica-link{padding:30px 24px}
+  .musica-url{font-size:16px;padding:10px 14px;max-width:100%;overflow-wrap:anywhere}
   body{font-size:17px}
   .cont{padding:0 16px}
   .top nav{display:none}
@@ -141,6 +154,7 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
       <a href="#instrumentos">Instrumentos</a>
       <a href="#efectos">Efectos</a>
       <a href="#instalar">Cómo instalar</a>
+      <a href="https://saavedrismo.bandcamp.com/">Mi música</a>
     </nav>
   </header>
 
@@ -293,6 +307,15 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
         <div class="bajar"><a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/LatexBoard-VST3-Windows.zip" download><b>Descargar para Windows</b><span>VST3, 0,8 MB</span></a></div>
       </div>
     </article>
+  </div>
+</section>
+
+<section class="musica" aria-labelledby="t-mus">
+  <div class="cont">
+    <a class="musica-link" href="https://saavedrismo.bandcamp.com/">
+      <span class="musica-txt"><span id="t-mus" class="musica-t">Escuchá mi música</span><span class="musica-s">Las canciones para las que hice estas herramientas, en Bandcamp</span></span>
+      <span class="musica-url">saavedrismo.bandcamp.com</span>
+    </a>
   </div>
 </section>
 
