@@ -43,7 +43,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--tinta);outline-offs
 
 /* ---------- portada ---------- */
 .hero{padding:56px 0 40px;display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:56px;align-items:end}
-.hero h1{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(34px,9.6vw,96px);line-height:.92;letter-spacing:-.035em}
+.hero h1{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(48px,5.4vw,72px);line-height:.92;letter-spacing:-.035em}
 .hero p{margin:28px 0 0;max-width:34em;font-size:20px;color:var(--tinta-2)}
 .ruta{display:flex;align-items:center;gap:12px;margin-top:28px;font-size:15px;color:var(--tinta-2)}
 .ruta span{font-weight:700;color:var(--tinta)}
@@ -112,6 +112,7 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
 
 /* ---------- celular ---------- */
 @media (max-width:900px){
+  .hero h1{font-size:clamp(34px,9.6vw,72px)}
   .hero{grid-template-columns:1fr;gap:40px;padding-top:28px}
   .ficha{grid-template-columns:1fr;gap:28px;padding:44px 0}
   .pantalla{position:static}
