@@ -89,6 +89,20 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
 .demo{display:flex;flex-direction:column;gap:8px}
 #recT{font-size:12.5px;text-align:center;min-height:32px}
 
+/* una octava (mouse y touch) */
+.oct{margin:0 auto 14px;max-width:640px}
+.oct-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.oct-bar span{font-size:14px}
+.oct-bar .pill{padding:7px 12px}
+.oct-keys{position:relative;height:150px;background:var(--ink);border-radius:16px;padding:7px;touch-action:none;user-select:none;-webkit-user-select:none}
+.ok{position:absolute;border-radius:9px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:8px;cursor:pointer;transition:background .05s}
+.ok.w{background:var(--cream);top:7px;bottom:7px}
+.ok.b{background:#3d2a55;top:7px;height:58%;border:2px solid var(--ink);z-index:2;color:var(--cream)}
+.ok .nn{font-size:13px;line-height:1}
+.ok .ac{font-family:"Shrikhand",serif;font-size:15px;line-height:1;margin-top:4px;opacity:.75}
+.ok.b .nn{font-size:11px} .ok.b .ac{font-size:12px}
+.ok.esc::before{content:"";position:absolute;top:8px;width:8px;height:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 1.5px var(--ink)}
+.ok.on{background:var(--kc)!important;color:var(--ink)}
 /* teclado */
 #kb{width:100%;height:80px;display:block;touch-action:none;cursor:pointer;border-radius:14px}
 .ayuda{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;margin-top:10px}
@@ -102,6 +116,9 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
   .ritmo{grid-template-columns:1fr}
 }
 @media (max-width:640px){
+  body{padding-bottom:196px}
+  .oct{position:fixed;left:0;right:0;bottom:0;z-index:40;margin:0;max-width:none;background:var(--cream);border-top:2.5px solid var(--ink);box-shadow:0 -4px 0 #2a164033;padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px))}
+  .oct-keys{height:136px}
   .top{grid-template-columns:1fr}
   .titulo{font-size:60px} #flor{width:80px;height:80px}
   .rack{gap:24px}
@@ -198,9 +215,14 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
     </section>
 
     <section class="panel p-teclado"><h2>Teclado</h2>
+      <div id="oct" class="oct" aria-label="Teclado de una octava">
+        <div class="oct-bar"><button class="pill" id="octMenos" aria-label="Bajar una octava">− OCT</button><span id="octLbl">Octava 4</span><button class="pill" id="octMas" aria-label="Subir una octava">OCT +</button></div>
+        <div class="oct-keys" id="octKeys"></div>
+      </div>
       <canvas id="kb"></canvas>
       <div class="ayuda">
         <span><b>1</b>…<b>7</b> tocan los acordes de la escala</span>
+        <span>El punto rosa marca las notas de la escala</span>
         <span><b>Q W E</b> <b>A S D</b> <b>Z X C</b> eligen el tipo de acorde</span>
         <span><b>R</b> +9</span>
         <span><b>Espacio</b> toca o para el ritmo</span>
@@ -412,8 +434,50 @@ const kbUp=e=>{if(!ptrNote.has(e.pointerId))return; const m=ptrNote.get(e.pointe
 kb.addEventListener('pointerup',kbUp); kb.addEventListener('pointercancel',kbUp);
 addEventListener('resize',()=>{KL=null; drawBg()});
 
-/* ---------- teclado de la compu ---------- */
+/* ---------- una octava (mouse y touch) ---------- */
 const SCL=[[0,2,4,5,7,9,11],[0,2,3,5,7,8,10]];
+const OCT_W=[0,2,4,5,7,9,11], OCT_B=[[1,0],[3,1],[6,3],[8,4],[10,5]];
+const NOMBRE=['Do','Do#','Re','Re#','Mi','Fa','Fa#','Sol','Sol#','La','La#','Si'];
+if(!(st.kbOct>=1&&st.kbOct<=7))st.kbOct=4;
+const okEls={};
+(()=>{const box=$('octKeys');
+  OCT_W.forEach((pc,i)=>{const d=document.createElement('div'); d.className='ok w'; d.style.left=`calc(7px + ${i}*(100% - 14px)/7)`; d.style.width=`calc((100% - 14px)/7 - 4px)`; d.dataset.pc=pc; d.innerHTML='<span class="nn"></span><span class="ac"></span>'; box.appendChild(d); okEls[pc]=d});
+  OCT_B.forEach(([pc,after])=>{const d=document.createElement('div'); d.className='ok b'; d.style.left=`calc(7px + ${after+1}*(100% - 14px)/7 - (100% - 14px)/7*0.32)`; d.style.width=`calc((100% - 14px)/7*0.62)`; d.dataset.pc=pc; d.innerHTML='<span class="nn"></span><span class="ac"></span>'; box.appendChild(d); okEls[pc]=d});
+  Object.entries(okEls).forEach(([pc,d])=>d.style.setProperty('--kc',rainbow(+pc)));
+  const ptr=new Map();
+  const noteFrom=e=>{const el=document.elementFromPoint(e.clientX,e.clientY); const k=el&&el.closest('.ok'); return k?{pc:+k.dataset.pc,el:k}:null};
+  const velFrom=(e,el)=>{const r=el.getBoundingClientRect(); return Math.min(1,0.5+0.5*(e.clientY-r.top)/r.height)};
+  const down=(id,k,v)=>{const m=12*(st.kbOct+1)+k.pc; ptr.set(id,m); held.add(m); k.el.classList.add('on'); on(m,v)};
+  const up=id=>{if(!ptr.has(id))return; const m=ptr.get(id); ptr.delete(id); if(![...ptr.values()].includes(m)){held.delete(m); off(m); const el=okEls[m%12]; el&&el.classList.remove('on')}};
+  box.addEventListener('pointerdown',e=>{const k=noteFrom(e); if(!k)return; e.preventDefault(); box.setPointerCapture(e.pointerId); down(e.pointerId,k,velFrom(e,k.el))});
+  box.addEventListener('pointermove',e=>{if(!ptr.has(e.pointerId))return; const k=noteFrom(e); if(!k)return; const m=12*(st.kbOct+1)+k.pc; if(m!==ptr.get(e.pointerId)){up(e.pointerId); down(e.pointerId,k,0.8)}});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(t=>box.addEventListener(t,e=>up(e.pointerId)));
+  $('octMenos').onclick=()=>{st.kbOct=Math.max(1,st.kbOct-1); changed('kbOct')};
+  $('octMas').onclick=()=>{st.kbOct=Math.min(7,st.kbOct+1); changed('kbOct')};
+})();
+// nombre del acorde que va a sonar en cada tecla (misma lógica que el motor)
+function acordeDe(pc){
+  if(st.mode!==0)return '';
+  const t=ui.ks>=0?ui.ks:st.chordType;
+  if(t>0)return LET[pc]+SUF(t);
+  const sc=SCL[st.scale], rel=(pc-st.key+12)%12, d=sc.indexOf(rel);
+  if(d<0)return LET[pc];
+  const t3=(sc[(d+2)%7]-rel+12)%12, t5=(sc[(d+4)%7]-rel+12)%12;
+  return LET[pc]+(t3===3?(t5===6?'dim':'m'):'');
+}
+let octSig='';
+function drawOct(){
+  const sig=[st.kbOct,st.key,st.scale,st.chordType,st.mode,ui.ks,st.add9].join();
+  if(sig===octSig)return; octSig=sig;
+  $('octLbl').textContent='Octava '+st.kbOct;
+  const sc=SCL[st.scale];
+  for(const [pc,el] of Object.entries(okEls)){const p=+pc;
+    el.querySelector('.nn').textContent=NOMBRE[p];
+    el.querySelector('.ac').textContent=acordeDe(p)+(st.mode===0&&st.add9&&acordeDe(p)?'add9':'');
+    el.classList.toggle('esc',sc.includes((p-st.key+12)%12))}
+}
+
+/* ---------- teclado de la compu ---------- */
 const degDown=new Map();
 addEventListener('keydown',e=>{
   if(e.target.matches('input,select,textarea')||e.metaKey||e.ctrlKey||e.altKey)return;
@@ -452,7 +516,7 @@ function refresh(){
   engineLabels(); Object.keys(knobEls).forEach(drawKnob);
   if($('tVal'))$('tVal').textContent=Math.abs(st.tempo-Math.round(st.tempo))<0.05?Math.round(st.tempo):st.tempo.toFixed(1);
   $('drumPlay').textContent=st.drumsOn?'PARAR RITMO':'TOCAR RITMO'; $('drumPlay').classList.toggle('on',st.drumsOn);
-  drawGrid(); screen();
+  drawGrid(); screen(); drawOct();
 }
 let lastAct=-1, led=0;
 function screen(){
@@ -465,7 +529,7 @@ let lastStep=-2, lastKs=-2, lastNotes='';
 function frame(){
   if(ui.act!==lastAct){lastAct=ui.act; led=1} else led*=0.85; $('led').style.opacity=0.25+0.75*led;
   if(ui.step!==lastStep){lastStep=ui.step; drawGrid()}
-  if(ui.ks!==lastKs){lastKs=ui.ks; updTipos()}
+  if(ui.ks!==lastKs){lastKs=ui.ks; updTipos(); drawOct()}
   const ns=(ui.notes||[]).join(',')+'|'+[...held].join(','); if(ns!==lastNotes){lastNotes=ns; drawKb()}
   screen(); drawFlor(performance.now()/1000);
   requestAnimationFrame(frame);
