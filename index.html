@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Saavedrismo · instrumentos y plugins gratis</title>
-<meta name="description" content="Instrumentos y plugins de audio gratis para Windows y Mac: Lirio (máquina de acordes), Niebla Studio (sintetizador ambiental) y cuatro efectos para mezclar.">
-<meta property="og:title" content="Saavedrismo · instrumentos y plugins gratis">
-<meta property="og:description" content="Lirio, Niebla Studio, Bowery NY Crush, Desarmador, Hurlingham 810 y Latex Board. Para Windows y Mac.">
+<title>Saavedrismo · la música de Nico Saavedra</title>
+<meta name="description" content="Saavedrismo es el proyecto solista de Nico Saavedra: canciones, piezas para películas que nadie filmó y los instrumentos y plugins gratis que hizo para grabarlas.">
+<meta property="og:title" content="Saavedrismo · la música de Nico Saavedra">
+<meta property="og:description" content="Canciones, piezas instrumentales e instrumentos gratis para hacer música. De Hurlingham a Mallorca.">
 <meta property="og:image" content="img/logo.webp">
 <link rel="icon" href="sol.svg" type="image/svg+xml">
 <style>
-@font-face{font-family:"New Rocker";src:url("fonts/new-rocker.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Anton";src:url("fonts/anton.woff2") format("woff2");font-display:swap}
 @font-face{font-family:"Archivo";src:url("fonts/archivo.woff2") format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
 :root{
   --celeste:#74acdf;      /* el celeste de la bandera */
@@ -20,6 +20,7 @@
   --tinta-2:#3c4d6b;
   --sol:#f6b40e;          /* el sol: solo para descargar */
   --sol-osc:#c98f00;
+  --logo:#fbb024;         /* el amarillo del logo */
   --mar:#0f5c8c;          /* Mediterráneo: enlaces */
   --blanco:#ffffff;
   --w-cont:1180px;
@@ -37,58 +38,29 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--tinta);outline-offs
 /* ---------- cabecera ---------- */
 .top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
 .marca{display:flex;align-items:center;gap:12px;color:var(--tinta);text-decoration:none;perspective:600px}
-.marca-palabra{display:inline-block;font-family:"New Rocker",serif;font-weight:400;font-size:34px;line-height:1;letter-spacing:.01em;transform-style:preserve-3d;}
+/* la palabra imita al logo: Anton, amarillo, contorno negro y relieve hacia abajo */
+.marca-palabra{display:inline-block;font-family:"Anton","Arial Narrow",sans-serif;font-weight:400;font-size:36px;line-height:1;letter-spacing:.01em;text-transform:uppercase;color:var(--logo);-webkit-text-stroke:2.2px #111;paint-order:stroke fill;text-shadow:0 1px 0 #111,0 2px 0 #111,0 3px 0 #111,0 4px 0 #111,0 5px 0 #111;transform-style:preserve-3d;padding-bottom:4px}
 @keyframes girar{0%,72%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
 .marca:hover .marca-palabra{animation:girar1 1.2s cubic-bezier(.6,0,.3,1)}
 @keyframes girar1{to{transform:rotateY(360deg)}}
-.logo-hero{perspective:1400px;margin:0 0 36px}
-.logo-hero img{width:min(460px,100%);height:auto;transform-style:preserve-3d;animation:girar 8s cubic-bezier(.6,0,.3,1) 1.2s infinite;filter:drop-shadow(0 18px 22px rgba(19,33,60,.25))}
+.logo-hero{perspective:1400px;margin:0}
+.logo-hero img{width:min(500px,100%);height:auto;transform-style:preserve-3d;animation:girar 8s cubic-bezier(.6,0,.3,1) 1.2s infinite;filter:drop-shadow(0 18px 22px rgba(19,33,60,.25))}
 @media (prefers-reduced-motion:reduce){.marca-palabra,.marca:hover .marca-palabra,.logo-hero img{animation:none}}
-.marca img{width:38px;height:38px}
+.marca img{width:40px;height:40px}
 .top nav{display:flex;gap:22px;font-size:16px}
 .top nav a{color:var(--tinta);text-decoration:none;font-weight:500}
 .top nav a:hover{text-decoration:underline}
 
-/* ---------- portada ---------- */
-.hero{padding:56px 0 40px;display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:56px;align-items:center}
-.hero h1{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(48px,5.4vw,72px);line-height:.92;letter-spacing:-.035em}
-.hero p{margin:28px 0 0;max-width:34em;font-size:20px;color:var(--tinta-2)}
+/* ---------- portada: la música ---------- */
+.hero{padding:40px 0 24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center}
+.hero h1{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(44px,5vw,68px);line-height:.95;letter-spacing:-.035em}
+.hero p{margin:24px 0 0;max-width:32em;font-size:20px;color:var(--tinta-2)}
 .ruta{display:flex;align-items:center;gap:12px;margin-top:28px;font-size:15px;color:var(--tinta-2)}
 .ruta span{font-weight:700;color:var(--tinta)}
 .ruta i{flex:0 0 64px;height:2px;background:repeating-linear-gradient(90deg,var(--tinta) 0 6px,transparent 6px 11px)}
+.acciones{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
 
-/* índice: el estante */
-.estante{background:var(--blanco);border-radius:18px;padding:8px 0;box-shadow:0 1px 0 var(--cielo-2),0 18px 40px -24px rgba(19,33,60,.35)}
-.estante h2{font-size:15px;font-weight:600;color:var(--tinta-2);margin:12px 24px 4px}
-.estante ul{list-style:none;margin:0;padding:0}
-.estante li a{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 24px;text-decoration:none;color:var(--tinta);border-top:1px solid var(--cielo)}
-.estante li a:hover{background:var(--cielo)}
-.estante b{font-weight:800;font-stretch:112%;font-size:18px}
-.estante small{grid-column:1;font-size:14.5px;color:var(--tinta-2)}
-.estante em{grid-row:1/3;grid-column:2;align-self:center;font-style:normal;font-size:13px;color:var(--tinta-2);text-align:right;line-height:1.35}
-
-/* ---------- grupos ---------- */
-.grupo{padding:72px 0 8px}
-.grupo>.cont>h2{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(32px,4.4vw,52px);letter-spacing:-.025em;line-height:1}
-.grupo>.cont>p{margin:14px 0 0;max-width:40em;color:var(--tinta-2)}
-
-/* ---------- ficha de cada programa ---------- */
-.ficha{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:start;padding:56px 0;border-bottom:2px solid var(--cielo-2)}
-.ficha:last-child{border-bottom:0}
-.pantalla{margin:0;position:sticky;top:24px}
-.pantalla img{border-radius:12px;box-shadow:0 30px 60px -30px rgba(19,33,60,.55),0 0 0 1px rgba(19,33,60,.08)}
-.pantalla figcaption{font-size:14px;color:var(--tinta-2);margin-top:10px}
-.ficha h3{margin:0;font-weight:900;font-stretch:118%;font-size:clamp(34px,4vw,48px);line-height:1;letter-spacing:-.03em}
-.ficha .que{margin:10px 0 0;font-size:20px;font-weight:600;color:var(--tinta)}
-.ficha .desc{margin:16px 0 0;color:var(--tinta-2)}
-.ficha ul.trae{margin:18px 0 0;padding:0;list-style:none}
-.ficha ul.trae li{padding:7px 0 7px 26px;position:relative;font-size:16.5px;border-top:1px solid var(--cielo-2)}
-.ficha ul.trae li::before{content:"";position:absolute;left:4px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--celeste);box-shadow:0 0 0 2px var(--tinta) inset}
-.sistemas{margin:18px 0 0;font-size:15px;color:var(--tinta-2)}
-.sistemas strong{color:var(--tinta)}
-
-/* descargas: lo único con el amarillo del sol */
-.bajar{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+/* botones */
 .btn{display:inline-flex;flex-direction:column;gap:1px;min-width:200px;padding:13px 20px 12px;border-radius:12px;background:var(--sol);color:var(--tinta);text-decoration:none;box-shadow:0 3px 0 var(--sol-osc);transition:transform .08s,box-shadow .08s}
 .btn:hover{background:#ffc22e}
 .btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--sol-osc)}
@@ -97,23 +69,105 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--tinta);outline-offs
 .btn.sec{background:var(--blanco);box-shadow:0 0 0 2px var(--tinta) inset}
 .btn.sec:hover{background:var(--cielo)}
 .btn.sec:active{transform:translateY(1px)}
+
+/* ---------- secciones ---------- */
+.seccion{padding:72px 0 8px}
+.seccion h2,.peliculas h2,#t-herr,.grupo>.cont>h2{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(32px,4.4vw,52px);letter-spacing:-.025em;line-height:1}
+.seccion .bajada,.grupo>.cont>p{margin:14px 0 0;max-width:40em;color:var(--tinta-2)}
+
+/* discos */
+.ep{display:grid;grid-template-columns:350px minmax(0,1fr);gap:48px;align-items:start;margin-top:40px}
+.ep h3{margin:0;font-weight:900;font-stretch:118%;font-size:clamp(30px,3.6vw,44px);line-height:1;letter-spacing:-.03em}
+.ep .tipo{margin:8px 0 0;font-size:15px;font-weight:600;color:var(--tinta-2);text-transform:uppercase;letter-spacing:.06em}
+.ep .desc{margin:16px 0 0;color:var(--tinta-2)}
+.reproductor{border:0;display:block;width:100%;max-width:350px;border-radius:14px;background:var(--blanco);box-shadow:0 30px 60px -30px rgba(19,33,60,.5),0 0 0 1px rgba(19,33,60,.08)}
+.simples-t{margin:64px 0 0;font-size:24px;font-weight:800;font-stretch:115%}
+.simples{display:grid;grid-template-columns:repeat(3,minmax(0,350px));justify-content:space-between;gap:32px;margin-top:20px}
+.simples figure{margin:0}
+.simples figcaption{margin-top:12px;font-size:15px;color:var(--tinta-2)}
+.simples figcaption b{color:var(--tinta);font-size:17px}
+.bandcamp-mas{margin-top:36px;font-size:17px}
+
+/* películas que nadie filmó */
+.peliculas{margin-top:80px;background:var(--tinta);color:var(--cielo);padding:80px 0}
+.peliculas h2{color:var(--blanco)}
+.peliculas .bajada{color:#c4d4e8}
+.pelis-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:48px;align-items:start;margin-top:40px}
+.pantalla-yt{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0b1428 radial-gradient(120% 90% at 30% 20%,#2a3d63 0,#0b1428 70%);box-shadow:0 30px 60px -30px rgba(0,0,0,.7),0 0 0 1px rgba(234,242,250,.12)}
+.pantalla-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.pantalla-yt .pronto{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:8px;padding:24px}
+.pantalla-yt .pronto b{font-family:"Anton",sans-serif;font-weight:400;font-size:clamp(30px,4vw,48px);letter-spacing:.02em;color:var(--logo);text-transform:uppercase}
+.pantalla-yt .pronto span{color:#c4d4e8;font-size:16px}
+.pantalla-yt button{position:absolute;inset:0;width:100%;border:0;padding:0;cursor:pointer;background:transparent;color:var(--blanco);display:grid;place-content:center;gap:12px;font:inherit}
+.pantalla-yt button img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.8}
+.pantalla-yt button i{position:relative;width:84px;height:84px;border-radius:50%;background:var(--logo);margin:auto;box-shadow:0 6px 0 #111}
+.pantalla-yt button i::after{content:"";position:absolute;left:33px;top:24px;border-left:28px solid #111;border-top:18px solid transparent;border-bottom:18px solid transparent}
+.pantalla-yt button span{position:relative;font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+.ficha-peli h3{margin:0;font-weight:900;font-stretch:118%;font-size:30px;line-height:1.05;letter-spacing:-.02em;color:var(--blanco)}
+.ficha-peli p{margin:14px 0 0;color:#dbe6f3}
+.ficha-peli dl{margin:20px 0 0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:15.5px}
+.ficha-peli dt{color:#9fb3cf}
+.ficha-peli dd{margin:0;color:var(--blanco)}
+.ficha-peli a{color:var(--logo)}
+
+
+/* mi historia */
+.hist-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:start;margin-top:36px}
+.hist-txt p{margin:0 0 16px;font-size:19px;color:var(--tinta-2);max-width:34em}
+.hist-txt p:first-child{font-size:22px;font-weight:600;color:var(--tinta);line-height:1.4}
+.linea{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:2px dashed var(--tinta)}
+.linea li{padding:14px 12px 0 0;position:relative}
+.linea li::before{content:"";position:absolute;top:-8px;left:0;width:14px;height:14px;border-radius:50%;background:var(--logo);box-shadow:0 0 0 2px var(--tinta)}
+.linea b{display:block;font-family:"Anton",sans-serif;font-weight:400;font-size:26px;letter-spacing:.02em}
+.linea span{font-size:14.5px;color:var(--tinta-2);line-height:1.35;display:block}
+.enlace{display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:28px;align-items:start;background:var(--blanco);border-radius:18px;padding:24px;box-shadow:0 18px 40px -24px rgba(19,33,60,.35)}
+.enlace .reproductor{box-shadow:0 0 0 1px rgba(19,33,60,.08);height:360px !important}
+.enlace h3{margin:4px 0 0;font-family:"Anton",sans-serif;font-weight:400;font-size:44px;letter-spacing:.02em;line-height:1}
+.enlace .tipo{margin:0;font-size:14px;font-weight:600;color:var(--tinta-2);text-transform:uppercase;letter-spacing:.06em}
+.enlace p{color:var(--tinta-2);font-size:16.5px}
+.enlace .acciones{margin-top:18px}
+.enlace .btn{min-width:0;flex:1 1 100%}
+
+/* ---------- herramientas (secundario) ---------- */
+.herramientas{padding:80px 0 0}
+.herramientas .intro{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:56px;align-items:start}
+.herramientas .intro p{margin:14px 0 0;max-width:34em;color:var(--tinta-2)}
+
+/* índice: el estante */
+.estante{background:var(--blanco);border-radius:18px;padding:8px 0;box-shadow:0 1px 0 var(--cielo-2),0 18px 40px -24px rgba(19,33,60,.35)}
+.estante h2{font-size:15px !important;font-weight:600 !important;font-stretch:100% !important;letter-spacing:0 !important;color:var(--tinta-2);margin:12px 24px 4px !important}
+.estante ul{list-style:none;margin:0;padding:0}
+.estante li a{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 24px;text-decoration:none;color:var(--tinta);border-top:1px solid var(--cielo)}
+.estante li a:hover{background:var(--cielo)}
+.estante b{font-weight:800;font-stretch:112%;font-size:18px}
+.estante small{grid-column:1;font-size:14.5px;color:var(--tinta-2)}
+.estante em{grid-row:1/3;grid-column:2;align-self:center;font-style:normal;font-size:13px;color:var(--tinta-2);text-align:right;line-height:1.35}
+
+/* ---------- grupos de herramientas ---------- */
+.grupo{padding:56px 0 8px}
+.grupo>.cont>h2{font-size:clamp(28px,3.4vw,40px)}
+
+/* ---------- ficha de cada programa ---------- */
+.ficha{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:start;padding:56px 0;border-bottom:2px solid var(--cielo-2)}
+.ficha:last-child{border-bottom:0}
+.pantalla{margin:0;position:sticky;top:24px}
+.pantalla img{border-radius:12px;box-shadow:0 30px 60px -30px rgba(19,33,60,.55),0 0 0 1px rgba(19,33,60,.08)}
+.pantalla figcaption{font-size:14px;color:var(--tinta-2);margin-top:10px}
+.ficha h3{margin:0;font-weight:900;font-stretch:118%;font-size:clamp(30px,3.4vw,42px);line-height:1;letter-spacing:-.03em}
+.ficha .que{margin:10px 0 0;font-size:20px;font-weight:600;color:var(--tinta)}
+.ficha .desc{margin:16px 0 0;color:var(--tinta-2)}
+.ficha ul.trae{margin:18px 0 0;padding:0;list-style:none}
+.ficha ul.trae li{padding:7px 0 7px 26px;position:relative;font-size:16.5px;border-top:1px solid var(--cielo-2)}
+.ficha ul.trae li::before{content:"";position:absolute;left:4px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--celeste);box-shadow:0 0 0 2px var(--tinta) inset}
+.sistemas{margin:18px 0 0;font-size:15px;color:var(--tinta-2)}
+.sistemas strong{color:var(--tinta)}
+.bajar{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
 .live-t{margin:30px 0 0;font-size:22px;font-weight:800;font-stretch:115%}
 .nota{margin-top:14px;font-size:14.5px;color:var(--tinta-2)}
 
-
-/* ---------- mi música ---------- */
-.musica{padding:72px 0 0}
-.musica-link{display:flex;align-items:flex-end;justify-content:space-between;gap:24px 40px;flex-wrap:wrap;padding:44px 48px;border-radius:24px;background:var(--celeste);color:var(--tinta);text-decoration:none;box-shadow:0 6px 0 var(--tinta)}
-.musica-link:hover{background:#86b9e6}
-.musica-link:active{transform:translateY(4px);box-shadow:0 2px 0 var(--tinta)}
-.musica-txt{display:flex;flex-direction:column;gap:12px}
-.musica-t{font-weight:900;font-stretch:125%;font-size:clamp(38px,5.6vw,72px);line-height:.95;letter-spacing:-.03em}
-.musica-s{font-size:19px;font-weight:500}
-.musica-url{font-weight:800;font-size:20px;background:var(--blanco);padding:12px 20px;border-radius:12px;text-decoration:underline;text-underline-offset:.2em}
-.instalar{margin-top:72px}
 /* ---------- instalar ---------- */
-.instalar{background:var(--tinta);color:var(--cielo);padding:72px 0}
-.instalar h2{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(32px,4.4vw,52px);letter-spacing:-.025em;line-height:1;color:var(--blanco)}
+.instalar{background:var(--tinta);color:var(--cielo);padding:72px 0;margin-top:40px}
+.instalar h2{margin:0;font-weight:900;font-stretch:125%;font-size:clamp(28px,3.4vw,40px);letter-spacing:-.025em;line-height:1;color:var(--blanco)}
 .instalar>.cont>p{max-width:42em;margin:16px 0 0;color:#c4d4e8}
 .dos{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:40px}
 .dos h3{margin:0 0 6px;font-size:24px;font-weight:800;font-stretch:115%;color:var(--blanco)}
@@ -131,23 +185,35 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
 .cafe{display:inline-block;margin-top:6px;font-weight:700}
 
 /* ---------- celular ---------- */
+@media (max-width:1100px){
+  .simples{grid-template-columns:repeat(2,minmax(0,350px));justify-content:start}
+}
 @media (max-width:900px){
-  .hero h1{font-size:clamp(34px,9.6vw,72px)}
-  .hero{grid-template-columns:1fr;gap:40px;padding-top:28px}
+  .hero h1{font-size:clamp(34px,9.6vw,68px)}
+  .hero{grid-template-columns:1fr;gap:32px;padding-top:16px}
+  .logo-hero img{width:min(420px,100%);margin:0 auto}
+  .ep,.pelis-grid,.hist-grid,.herramientas .intro{grid-template-columns:1fr;gap:32px}
   .ficha{grid-template-columns:1fr;gap:28px;padding:44px 0}
   .pantalla{position:static}
   .dos,footer .cont{grid-template-columns:1fr;gap:32px}
+  .top nav{gap:16px;font-size:15px}
+}
+@media (max-width:720px){
+  .enlace{grid-template-columns:1fr}
+  .enlace .reproductor{height:470px !important;margin:0 auto}
+  .linea{grid-template-columns:repeat(2,1fr);row-gap:22px}
+  .simples{grid-template-columns:minmax(0,350px);justify-content:center}
+  .ep .reproductor{margin:0 auto}
 }
 @media (max-width:560px){
-  .musica-link{padding:30px 24px}
-  .musica-url{font-size:16px;padding:10px 14px;max-width:100%;overflow-wrap:anywhere}
   body{font-size:17px}
   .cont{padding:0 16px}
   .top nav{display:none}
+  .marca-palabra{font-size:32px}
   .hero p{font-size:18px}
   .btn{flex:1 1 100%}
   .estante li a{padding:12px 16px}
-  .estante h2{margin-left:16px}
+  .estante h2{margin-left:16px !important}
 }
 </style>
 </head>
@@ -155,38 +221,145 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
 
 <div class="cont">
   <header class="top">
-    <a class="marca" href="#">
-      <img src="sol.svg" width="38" height="38" alt="">
+    <a class="marca" href="#" aria-label="Saavedrismo, inicio">
+      <img src="sol.svg" width="40" height="40" alt="">
       <span class="marca-palabra">Saavedrismo</span>
     </a>
     <nav aria-label="Secciones">
-      <a href="#instrumentos">Instrumentos</a>
-      <a href="#efectos">Efectos</a>
-      <a href="#instalar">Cómo instalar</a>
-      <a href="https://saavedrismo.bandcamp.com/">Mi música</a>
+      <a href="#discos">Discos</a>
+      <a href="#peliculas">Películas que nadie filmó</a>
+      <a href="#historia">Mi historia</a>
+      <a href="#herramientas">Herramientas</a>
+      <a href="https://www.youtube.com/@SaavedrismoMusica">YouTube</a>
     </nav>
   </header>
 
-  <section class="hero">
+  <section class="hero" aria-labelledby="t-hero">
+    <div class="logo-hero"><img src="img/logo.webp" width="859" height="694" alt="Logo de Saavedrismo"></div>
     <div>
-      <div class="logo-hero"><img src="img/logo.webp" width="859" height="694" alt="Saavedrismo"></div>
-      <h1>Instrumentos y plugins para hacer música. Gratis.</h1>
-      <p>Acá les dejo una serie de herramientas digitales para hacer música, que hice con la ayuda de “Claudito”. Soy Nico Saavedra, músico y técnico informático: las necesitaba para grabar mis canciones y ahora las pueden bajar, usar y compartir.</p>
+      <h1 id="t-hero">Canciones de Nico Saavedra.</h1>
+      <p>Me gusta tocar todos los instrumentos, pero lo que mejor me sale es hacer canciones. Empecé en 2002 con ENLACE y, después de emigrar a España, arranqué Saavedrismo, mi proyecto solista. Acá está todo: los discos, las piezas instrumentales y las herramientas que me armé para grabarlas.</p>
       <div class="ruta" aria-label="De Hurlingham a Mallorca"><span>Hurlingham</span><i></i><span>Mallorca</span></div>
+      <div class="acciones">
+        <a class="btn" href="#discos"><b>Escuchar</b><span>EP y simples</span></a>
+        <a class="btn sec" href="https://saavedrismo.bandcamp.com/"><b>Bandcamp</b><span>saavedrismo.bandcamp.com</span></a>
+      </div>
     </div>
-    <nav class="estante" aria-label="Todos los programas">
-      <h2>Lo que hay para bajar</h2>
-      <ul>
-        <li><a href="#lirio"><b>Lirio</b><small>Máquina de acordes</small><em>Windows, Mac<br>y navegador</em></a></li>
-        <li><a href="#niebla"><b>Niebla Studio</b><small>Sintetizador ambiental</small><em>Windows, Mac<br>y navegador</em></a></li>
-        <li><a href="#bowery"><b>Bowery NY Crush</b><small>Compresor paralelo</small><em>Windows</em></a></li>
-        <li><a href="#desarmador"><b>Desarmador</b><small>Separa una batería grabada con un micrófono</small><em>Windows</em></a></li>
-        <li><a href="#hurlingham"><b>Hurlingham 810</b><small>Equipo valvular de bajo</small><em>Windows</em></a></li>
-        <li><a href="#latex"><b>Latex Board</b><small>Pedalera de guitarra</small><em>Windows</em></a></li>
-      </ul>
-    </nav>
   </section>
 </div>
+
+<section class="seccion" id="discos" aria-labelledby="t-discos">
+  <div class="cont">
+    <h2 id="t-discos">Discos</h2>
+    <p class="bajada">Se escuchan acá mismo. Si te gustan, en Bandcamp los podés bajar en buena calidad y bancar el proyecto.</p>
+
+    <div class="ep">
+      <iframe class="reproductor" title="Ahora Despues, EP de Saavedrismo, en Bandcamp" style="height:633px" loading="lazy" src="https://bandcamp.com/EmbeddedPlayer/album=1785280800/size=large/bgcol=ffffff/linkcol=0f5c8c/tracklist=true/transparent=true/"><a href="https://saavedrismo.bandcamp.com/album/ahora-despues">Ahora Despues en Bandcamp</a></iframe>
+      <div>
+        <p class="tipo">EP · 2024</p>
+        <h3>Ahora Despues</h3>
+        <p class="desc">Mi primer EP solista: cuatro canciones nuevas y, de yapa, “Hombre Feo”, una de ENLACE, mi primera banda.</p>
+        <p class="desc">Deja de Suponer · Cuentas Magicas · Fin Du Monde · Exigir · Hombre Feo (Enlace)</p>
+        <div class="acciones">
+          <a class="btn sec" href="https://saavedrismo.bandcamp.com/album/ahora-despues"><b>Ver en Bandcamp</b><span>Escuchar y descargar</span></a>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="simples-t">Simples</h3>
+    <div class="simples">
+      <figure>
+        <iframe class="reproductor" title="Almohada Marcada, simple de Saavedrismo, en Bandcamp" style="height:470px" loading="lazy" src="https://bandcamp.com/EmbeddedPlayer/album=867023032/size=large/bgcol=ffffff/linkcol=0f5c8c/tracklist=false/transparent=true/"><a href="https://saavedrismo.bandcamp.com/album/almohada-marcada-2">Almohada Marcada en Bandcamp</a></iframe>
+        <figcaption><b>Almohada Marcada</b> · 2025</figcaption>
+      </figure>
+      <figure>
+        <iframe class="reproductor" title="Aqui se Cuecen Habas, simple de Saavedrismo, en Bandcamp" style="height:470px" loading="lazy" src="https://bandcamp.com/EmbeddedPlayer/album=941982792/size=large/bgcol=ffffff/linkcol=0f5c8c/tracklist=false/transparent=true/"><a href="https://saavedrismo.bandcamp.com/album/aqui-se-cuecen-habas">Aqui se Cuecen Habas en Bandcamp</a></iframe>
+        <figcaption><b>Aqui se Cuecen Habas</b> · 2025</figcaption>
+      </figure>
+      <figure>
+        <iframe class="reproductor" title="amigo, simple de Saavedrismo, en Bandcamp" style="height:470px" loading="lazy" src="https://bandcamp.com/EmbeddedPlayer/album=517768943/size=large/bgcol=ffffff/linkcol=0f5c8c/tracklist=false/transparent=true/"><a href="https://saavedrismo.bandcamp.com/album/amigo">amigo en Bandcamp</a></iframe>
+        <figcaption><b>amigo</b> · 2025</figcaption>
+      </figure>
+    </div>
+    <p class="bandcamp-mas">Todo junto en <a href="https://saavedrismo.bandcamp.com/">saavedrismo.bandcamp.com</a>. Videos en <a href="https://www.youtube.com/@SaavedrismoMusica">YouTube</a> y lo del día a día en <a href="https://www.instagram.com/saavedrismo/">Instagram</a>.</p>
+  </div>
+</section>
+
+<section class="peliculas" id="peliculas" aria-labelledby="t-pelis">
+  <div class="cont">
+    <h2 id="t-pelis">Películas que nadie filmó</h2>
+    <p class="bajada">Piezas largas e instrumentales, tocadas de una sola vez. Bandas sonoras para películas que todavía no tienen director: la imagen la ponés vos.</p>
+
+    <div class="pelis-grid">
+      <!-- Para publicar el video: poner el id de YouTube en data-yt (lo que va después de "v=" en el enlace) -->
+      <div class="pantalla-yt" data-yt="" data-titulo="Lluvia en Alaró">
+        <div class="pronto"><b>Muy pronto</b><span>Se estrena en YouTube</span></div>
+      </div>
+      <div class="ficha-peli">
+        <h3>Nº 1 · Lluvia en Alaró</h3>
+        <p>Unos quince minutos tocando Niebla en vivo, con la lluvia de fondo e imágenes de Alaró en un día de lluvia.</p>
+        <dl>
+          <dt>Duración</dt><dd>15 minutos, aprox.</dd>
+          <dt>Instrumento</dt><dd><a href="#niebla">Niebla Studio</a>, que se baja gratis más abajo</dd>
+          <dt>Lugar</dt><dd>Alaró, Mallorca</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion historia" id="historia" aria-labelledby="t-hist">
+  <div class="cont">
+    <h2 id="t-hist">Mi historia con la música</h2>
+    <div class="hist-grid">
+      <div class="hist-txt">
+        <p>Me gusta tocar todos los instrumentos. No me considero especialmente bueno en ninguno, pero lo que creo que me sale mejor es hacer canciones.</p>
+        <p>Empecé en 2002 con mi banda, ENLACE, donde fui siempre cantante y compositor. A lo largo de los años hubo varias formaciones, y también toqué la guitarra y después la batería.</p>
+        <p>Después de emigrar a España arranqué Saavedrismo, mi proyecto solista: mi espacio para experimentar, crear libremente y documentar la música sin intermediarios. Hoy también toco en varias bandas. La música es el hilo que une todas las etapas de mi vida.</p>
+        <ol class="linea">
+          <li><b>2002</b><span>Nace ENLACE</span></li>
+          <li><b>2020</b><span>Empieza Saavedrismo</span></li>
+          <li><b>2024</b><span>Sale el EP <i>Ahora Despues</i></span></li>
+          <li><b>2025</b><span>Tres simples nuevos</span></li>
+        </ol>
+      </div>
+      <article class="enlace">
+        <iframe class="reproductor" title="Enlace II, de ENLACE, en Bandcamp" style="height:470px" loading="lazy" src="https://bandcamp.com/EmbeddedPlayer/album=2263803080/size=large/bgcol=ffffff/linkcol=0f5c8c/tracklist=false/transparent=true/"><a href="https://enlace.bandcamp.com/">ENLACE en Bandcamp</a></iframe>
+        <div>
+          <p class="tipo">Banda · desde 2002</p>
+          <h3>ENLACE</h3>
+          <p>Mi primer proyecto serio. Donde descubrí que lo mío era hacer canciones y compartir la música con otros músicos.</p>
+          <div class="acciones">
+            <a class="btn sec" href="https://enlace.bandcamp.com/"><b>ENLACE en Bandcamp</b><span>Toda la discografía</span></a>
+            <a class="btn sec" href="https://nicosaavedra.tech/enlace.html"><b>Jugá el videojuego</b><span>Enlace contra los Burócratas (del Rock)</span></a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="herramientas" id="herramientas" aria-labelledby="t-herr">
+  <div class="cont">
+    <div class="intro">
+      <div>
+        <h2 id="t-herr">Herramientas para hacer música. Gratis.</h2>
+        <p>Acá les dejo una serie de herramientas digitales para hacer música, que hice con la ayuda de “Claudito”. Soy Nico Saavedra, músico y técnico informático: las necesitaba para grabar mis canciones y ahora las pueden bajar, usar y compartir.</p>
+      </div>
+      <nav class="estante" aria-label="Todos los programas">
+        <h2>Lo que hay para bajar</h2>
+        <ul>
+          <li><a href="#lirio"><b>Lirio</b><small>Máquina de acordes</small><em>Windows, Mac<br>y navegador</em></a></li>
+          <li><a href="#niebla"><b>Niebla Studio</b><small>Sintetizador ambiental</small><em>Windows, Mac<br>y navegador</em></a></li>
+          <li><a href="#bowery"><b>Bowery NY Crush</b><small>Compresor paralelo</small><em>Windows</em></a></li>
+          <li><a href="#desarmador"><b>Desarmador</b><small>Separa una batería grabada con un micrófono</small><em>Windows</em></a></li>
+          <li><a href="#hurlingham"><b>Hurlingham 810</b><small>Equipo valvular de bajo</small><em>Windows</em></a></li>
+          <li><a href="#latex"><b>Latex Board</b><small>Pedalera de guitarra</small><em>Windows</em></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</section>
 
 <section class="grupo" id="instrumentos" aria-labelledby="t-inst">
   <div class="cont">
@@ -331,15 +504,6 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
   </div>
 </section>
 
-<section class="musica" aria-labelledby="t-mus">
-  <div class="cont">
-    <a class="musica-link" href="https://saavedrismo.bandcamp.com/">
-      <span class="musica-txt"><span id="t-mus" class="musica-t">Escuchá mi música</span><span class="musica-s">Las canciones para las que hice estas herramientas, en Bandcamp</span></span>
-      <span class="musica-url">saavedrismo.bandcamp.com</span>
-    </a>
-  </div>
-</section>
-
 <section class="instalar" id="instalar" aria-labelledby="t-ins">
   <div class="cont">
     <h2 id="t-ins">Cómo instalar</h2>
@@ -370,16 +534,34 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
   <div class="cont">
     <div>
       <h2>Sobre Saavedrismo</h2>
-      <p>Saavedrismo es mi proyecto de tecnología, música y migración: soy argentino, vivo en Mallorca, toco, grabo y arreglo computadoras. Estas herramientas son gratis y se pueden compartir.</p>
-      <p><a href="https://nicosaavedra.tech">nicosaavedra.tech</a></p>
+      <p>Saavedrismo es mi proyecto de música, tecnología y migración: soy argentino, vivo en Mallorca, hago canciones, grabo y arreglo computadoras. Las herramientas de esta página son gratis y se pueden compartir.</p>
+      <p><a href="https://saavedrismo.bandcamp.com/">Bandcamp</a> · <a href="https://www.youtube.com/@SaavedrismoMusica">YouTube</a> · <a href="https://www.instagram.com/saavedrismo/">Instagram</a> · <a href="https://nicosaavedra.tech">nicosaavedra.tech</a></p>
     </div>
     <div>
-      <h2>Si te sirvieron</h2>
-      <p>Contame qué hiciste con ellas o avisame si algo no anda, con una captura del error. Y si querés bancar el proyecto:</p>
+      <h2>Si te gustó</h2>
+      <p>Contame qué escuchaste o qué hiciste con las herramientas, o avisame si algo no anda, con una captura del error. Y si querés bancar el proyecto:</p>
       <a class="cafe" href="https://paypal.me/NICOLASSAAVEDRA562/4EUR">Invitame un café</a>
     </div>
   </div>
 </footer>
+
+<script>
+/* Video de "Películas que nadie filmó": se carga recién cuando tocás play (sin YouTube hasta entonces). */
+document.querySelectorAll('.pantalla-yt[data-yt]').forEach(function(box){
+  var id=(box.getAttribute('data-yt')||'').trim();
+  if(!/^[\w-]{11}$/.test(id)) return;
+  var t=box.getAttribute('data-titulo')||'Video';
+  box.innerHTML='';
+  var b=document.createElement('button');
+  b.type='button';
+  b.setAttribute('aria-label','Ver '+t+' en YouTube');
+  b.innerHTML='<img alt="" loading="lazy" src="https://i.ytimg.com/vi/'+id+'/hqdefault.jpg"><i></i><span>Ver en YouTube</span>';
+  b.addEventListener('click',function(){
+    box.innerHTML='<iframe title="'+t+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0"></iframe>';
+  });
+  box.appendChild(b);
+});
+</script>
 
 </body>
 </html>
