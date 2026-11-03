@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Saavedrismo · la música de Nico Saavedra</title>
-<meta name="description" content="Saavedrismo es el proyecto solista de Nico Saavedra: canciones, piezas para películas que nadie filmó y los instrumentos y plugins gratis que hizo para grabarlas.">
+<meta name="description" content="Saavedrismo es el proyecto solista de Nico Saavedra: canciones, música para films del futuro y los instrumentos y plugins gratis que hizo para grabarlas.">
 <meta property="og:title" content="Saavedrismo · la música de Nico Saavedra">
 <meta property="og:description" content="Canciones, piezas instrumentales e instrumentos gratis para hacer música. De Hurlingham a Mallorca.">
 <meta property="og:image" content="img/logo.webp">
@@ -88,7 +88,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--tinta);outline-offs
 .simples figcaption b{color:var(--tinta);font-size:17px}
 .bandcamp-mas{margin-top:36px;font-size:17px}
 
-/* películas que nadie filmó */
+/* música para films del futuro */
 .peliculas{margin-top:80px;background:var(--tinta);color:var(--cielo);padding:80px 0}
 .peliculas h2{color:var(--blanco)}
 .peliculas .bajada{color:#c4d4e8}
@@ -227,7 +227,7 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
     </a>
     <nav aria-label="Secciones">
       <a href="#discos">Discos</a>
-      <a href="#peliculas">Películas que nadie filmó</a>
+      <a href="#peliculas">Música para films del futuro</a>
       <a href="#historia">Mi historia</a>
       <a href="#herramientas">Herramientas</a>
       <a href="https://www.youtube.com/@SaavedrismoMusica">YouTube</a>
@@ -287,8 +287,8 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
 
 <section class="peliculas" id="peliculas" aria-labelledby="t-pelis">
   <div class="cont">
-    <h2 id="t-pelis">Películas que nadie filmó</h2>
-    <p class="bajada">Piezas largas e instrumentales, tocadas de una sola vez. Bandas sonoras para películas que todavía no tienen director: la imagen la ponés vos.</p>
+    <h2 id="t-pelis">Música para films del futuro</h2>
+    <p class="bajada">Piezas largas e instrumentales, tocadas de una sola vez. Bandas sonoras para películas que todavía no se filmaron: la imagen la ponés vos.</p>
 
     <div class="pelis-grid">
       <!-- Para publicar el video: poner el id de YouTube en data-yt (lo que va después de "v=" en el enlace) -->
@@ -546,7 +546,7 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
 </footer>
 
 <script>
-/* Video de "Películas que nadie filmó": se carga recién cuando tocás play (sin YouTube hasta entonces). */
+/* Video de "Música para films del futuro": se carga recién cuando tocás play (sin YouTube hasta entonces). */
 document.querySelectorAll('.pantalla-yt[data-yt]').forEach(function(box){
   var id=(box.getAttribute('data-yt')||'').trim();
   if(!/^[\w-]{11}$/.test(id)) return;
