@@ -5,5 +5,7 @@
 4c8299fc1c0adf443127413de0271fbf99b1cd6274ddba501f9e947bd90684f2  Lirio-1.4-Mac.zip
 019ff639f5dd3110c074cd500f56c4fd399fc8f4dc7f515b137dc7780cad96cf  Lirio-1.4-codigo-fuente.zip
 ea2de1d70e56c945ef46f766984e1aad493d8572d11386de0a591a12d818ada8  Lirio-Instalador-1.4.exe
-e0860153eb93406ba55864239023ce56721a13c5c2ae8690c0dda55e40edb55f  Niebla-Studio-1.0.2-Mac.zip
-823adc9620f234298407d39c15586254840db1076428c6f6a598af7db0553b36  Niebla-Studio-Instalador-1.0.2.exe
+9de4492711f912217daf75f604fa11a4ec0eacedd3c994c8fbc4c2ddfabf290e  Niebla-Live-1.1.0-Mac.zip
+c7a5b345b601a1b3817a5c4c2401aed71264cc63e8dc3abab352c1d6578becb4  Niebla-Live-Instalador-1.1.0.exe
+5b4f2ec80818263723b6a6aa83af5647f5cac2bf9dcb416d4493ecef781a9fc4  Niebla-Studio-1.1.0-Mac.zip
+d338dc47fb8dff5db49442067c4e7c7a515fc0cd17299fde3381485c6db7f064  Niebla-Studio-Instalador-1.1.0.exe
