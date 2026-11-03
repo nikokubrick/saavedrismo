@@ -118,7 +118,7 @@
       last.connect(v.g); v.g.connect(B.bus);
       v.vib=ctx.createOscillator(); v.vib.frequency.value=5.4+Math.random()*0.4; v.vibG=ctx.createGain(); v.vibG.gain.value=0; v.vib.connect(v.vibG); v.vib.start();
       v.oscs=[]; (tim==='sierra'?[['sawtooth',0],['square',-5],['sawtooth',7]]:[['sawtooth',-6],['sawtooth',6],['triangle',0]]).forEach(([ty,det])=>{
-        const o=ctx.createOscillator(); o.type=ty; o.detune.value=det; v.vibG.connect(o.detune); const a=ctx.createGain(); a.gain.value=ty==='triangle'?0.3:0.38; o.connect(a); a.connect(v.lp); o.start(); v.oscs.push(o)});
+        const o=ctx.createOscillator(); o.type=ty; o.detune.value=det; v.vibG.connect(o.detune); if(window.NS&&NS.nodes&&NS.nodes.pitch)NS.nodes.pitch.connect(o.detune); const a=ctx.createGain(); a.gain.value=ty==='triangle'?0.3:0.38; o.connect(a); a.connect(v.lp); o.start(); v.oscs.push(o)});
       v.ns=ctx.createBufferSource(); v.ns.buffer=noise; v.ns.loop=true; const nb=ctx.createBiquadFilter(); nb.type='bandpass'; nb.frequency.value=3200; nb.Q.value=0.7; v.ng=ctx.createGain(); v.ng.gain.value=0; v.ns.connect(nb); nb.connect(v.ng); v.ng.connect(v.lp); v.ns.start();
       v.set=(m,y,glide,now)=>{const T=now?0.005:glide, tt=ctx.currentTime; v.oscs.forEach(o=>o.frequency.setTargetAtTime(H.mtof(m),tt,T));
         v.lp.frequency.setTargetAtTime(500+Math.pow(y,1.3)*(tim==='viola'?3500:6500),tt,0.05);

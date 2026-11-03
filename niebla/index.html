@@ -7,14 +7,28 @@
 <link rel="canonical" href="https://nicosaavedra.tech/pads.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sintetizador de pads y drones ambientales online | Saavedrismo">
-<meta property="og:description" content="Sintetizador de pads y drones ambientales en el navegador: acordes eternos, sonidos encontrados (grito, metal, radio o tu propia grabación), teclado MIDI, mesa de mezcla, vocoder y grabación. Gratis y sin instalar nada.">
+<meta property="og:description" content="Sintetizador de pads y drones ambientales en el navegador: acordes eternos, sonidos encontrados (grito, metal, radio o tu propia grabación), pitch, filtros, LOFI, teclado MIDI, mesa de mezcla, vocoder, modo en vivo 16:9 y grabación. Gratis y sin instalar nada.">
 <meta property="og:url" content="https://nicosaavedra.tech/pads.html">
 <meta name="sv-tool" content="pads">
 <title>Sintetizador de pads y drones ambientales online | Saavedrismo</title>
 
-<meta name="description" content="Sintetizador de pads y drones ambientales en el navegador: acordes eternos, sonidos encontrados (grito, metal, radio o tu propia grabación), teclado MIDI, mesa de mezcla, vocoder y grabación. Gratis y sin instalar nada.">
+<meta name="description" content="Sintetizador de pads y drones ambientales en el navegador: acordes eternos, sonidos encontrados (grito, metal, radio o tu propia grabación), pitch, filtros, LOFI, teclado MIDI, mesa de mezcla, vocoder, modo en vivo 16:9 y grabación. Gratis y sin instalar nada.">
 <meta name="theme-color" content="#15161c">
 <link rel="stylesheet" href="niebla-fonts.css">
+<script>
+/* Niebla Studio (programa de PC/Mac): arranca siempre en default.
+   Borra el sonido guardado (preset, capas, mezcla, vocoder, teclado) y conserva
+   lo que es configuración del equipo: knobs MIDI asignados, entrada/salida de audio y "Tu sonido". */
+(function(){
+  if(!/Electron/i.test(navigator.userAgent))return; // en la web se mantiene como lo dejaste
+  try{
+    ['niebla-saavedrista','arco-saavedrista','polilla-saavedrista','engranaje-saavedrista','congelador-saavedrista','niebla-studio-mix','niebla-studio-vocoder']
+      .forEach(k=>localStorage.removeItem(k));
+    const k=JSON.parse(localStorage.getItem('niebla-studio-keys')||'null');
+    if(k)localStorage.setItem('niebla-studio-keys',JSON.stringify({map:k.map||{},inId:k.inId||'',outId:k.outId||'',dev:k.dev||'all'}));
+  }catch(e){}
+})();
+</script>
 <script src="arco.js"></script>
 <script src="polilla.js"></script>
 <script src="engranaje.js"></script>
@@ -176,6 +190,17 @@ details.capa[open]{display:grid; gap:14px}
 .capas{display:grid; gap:14px}
 </style>
 <link rel="stylesheet" href="niebla-studio.css">
+<script>/* Niebla Live: disposición 16:9 */ if(/[?&]live\b/.test(location.search)||window.NIEBLA_LIVE)document.documentElement.classList.add("live")</script>
+<link rel="stylesheet" href="niebla-live.css">
+<style>
+.maestro{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.maestro .knobs{flex:1 1 auto}
+.lofi{flex:0 0 auto;width:96px;height:96px;border-radius:50%!important;border:3px solid #000;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;
+  background:radial-gradient(circle at 50% 35%,#ff9a52,#d65a10 70%);color:#1d0e03;font:700 17px var(--f-pixel);letter-spacing:.12em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  box-shadow:inset 0 2px 0 #fff6,0 5px 0 #000,0 0 0 4px #2a2b2f}
+.lofi small{font:500 9.5px var(--f-term);letter-spacing:.04em;text-transform:none;opacity:.8}
+.lofi[aria-pressed="true"]{transform:translateY(4px);box-shadow:inset 0 2px 6px #0008,0 1px 0 #000,0 0 0 4px #2a2b2f,0 0 22px #ff7a1a;background:radial-gradient(circle at 50% 35%,#ffd08a,#ff7a1a 70%)}
+</style>
 </head>
 <body>
 <a href="../" style="position:fixed;top:10px;left:10px;z-index:50;font:600 13px Barlow,system-ui,sans-serif;color:#f2ead8;background:#000a;padding:6px 10px;border-radius:6px;text-decoration:none">← Saavedrismo</a>
@@ -233,6 +258,10 @@ details.capa[open]{display:grid; gap:14px}
   <h2 class="lbl">FX LOCOS</h2>
   <div class="knobs px" id="fxknobs"></div>
   <p class="hint">Empezá con poco: subidos a fondo estos tres destruyen el sonido, y esa es la idea.</p>
+
+  <h2 class="lbl">MAESTRO</h2>
+  <div class="maestro"><div class="knobs px" id="masterknobs"></div><button class="lofi" id="lofiBtn" type="button" aria-pressed="false">LOFI<small>mantené apretado</small></button></div>
+  <p class="hint">PITCH dobla la afinación de todo y vuelve solo al centro cuando lo soltás. HPF y LPF recortan graves y agudos de todo Niebla. LOFI ensucia todo mientras lo apretás (también con la tecla L).</p>
 
   <h2 class="lbl">TEXTURA</h2>
   <div class="knobs px" id="knobs"></div>
@@ -321,7 +350,15 @@ function store(key,def){let v=def; try{const s=JSON.parse(localStorage.getItem(k
     ['swirl','Remolino',0,100,1,v=>v],
     ['metal','Metal',0,100,1,v=>v]
   ];
-  const ALLK=KNOBS.concat(FXK);
+  const hz=v=>v>=1000?(v/1000).toFixed(v>=10000?0:1)+' kHz':Math.round(v)+' Hz';
+  const hpfHz=v=>20*Math.pow(100,v/100), lpfHz=v=>200*Math.pow(100,v/100); // HPF 20 Hz–2 kHz · LPF 200 Hz–20 kHz
+  const pitchSt=v=>Math.sign(v)*12*Math.pow(Math.abs(v)/100,1.6);        // ±12 semitonos, fino cerca del centro
+  const MASTERK=[
+    ['pitch','Pitch',-100,100,1,v=>{const x=pitchSt(v); return (x>0?'+':'')+x.toFixed(1)+' st'}],
+    ['hpf','HPF',0,100,1,v=>v<=0?'apagado':hz(hpfHz(v))],
+    ['lpf','LPF',0,100,1,v=>v>=100?'apagado':hz(lpfHz(v))]
+  ];
+  const ALLK=KNOBS.concat(FXK).concat(MASTERK);
   const PRESETS={
     'Niebla':   {timbre:'cuerdas',color:'add9',glide:6,bright:38,space:72,echo:30,tape:35,dust:18,breath:40,drone:true,sub:true,shimmer:true},
     'Catedral': {timbre:'organo', color:'sus2',glide:8,bright:30,space:90,echo:15,tape:10,dust:0, breath:20,drone:true,sub:true,shimmer:true},
@@ -342,6 +379,8 @@ function store(key,def){let v=def; try{const s=JSON.parse(localStorage.getItem(k
   $('key').value=st.key;
   const knobHTML=([id,label,min,max,step])=>`<label class="k"><span>${label}</span><input type="range" id="k_${id}" min="${min}" max="${max}" step="${step}" aria-label="${label}"><output id="o_${id}"></output></label>`;
   $('fxknobs').innerHTML=FXK.map(knobHTML).join('');
+  $('masterknobs').innerHTML=MASTERK.map(knobHTML).join('');
+  if(st.pitch==null)st.pitch=0; if(st.hpf==null)st.hpf=0; if(st.lpf==null)st.lpf=100; st.pitch=0;
   $('knobs').innerHTML=KNOBS.map(([id,label,min,max,step])=>`<label class="k"><span>${label}</span><input type="range" id="k_${id}" min="${min}" max="${max}" step="${step}" aria-label="${label}"><output id="o_${id}"></output></label>`).join('');
   $('presets').innerHTML=Object.keys(PRESETS).map(n=>`<button data-p="${esc(n)}">${esc(n)}</button>`).join('');
 
@@ -357,7 +396,7 @@ function store(key,def){let v=def; try{const s=JSON.parse(localStorage.getItem(k
   const updSub=togBind('tSub','sub',retrigger);
   const updShim=togBind('tShimmer','shimmer',retrigger);
   function renderKnobs(){ALLK.forEach(([id,,,, ,fmt])=>{$('k_'+id).value=st[id]; $('o_'+id).textContent=fmt(st[id])})}
-  ALLK.forEach(([id,,,, ,fmt])=>$('k_'+id).addEventListener('input',e=>{st[id]=+e.target.value; $('o_'+id).textContent=fmt(st[id]); if(id!=='vol')markCustom(); S.save(); applyParams()}));
+  ALLK.forEach(([id,,,, ,fmt])=>$('k_'+id).addEventListener('input',e=>{st[id]=+e.target.value; $('o_'+id).textContent=fmt(st[id]); if(id!=='vol'&&!MASTERK.some(m=>m[0]===id))markCustom(); S.save(); applyParams()}));
   function renderPresets(){document.querySelectorAll('#presets button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.p===st.preset))}
   function markCustom(){if(st.preset){st.preset=''; renderPresets()}}
   document.querySelectorAll('#presets button').forEach(b=>b.onclick=()=>{
@@ -418,7 +457,24 @@ function store(key,def){let v=def; try{const s=JSON.parse(localStorage.getItem(k
     N.master=ctx.createGain();
     N.comp=ctx.createDynamicsCompressor(); N.comp.threshold.value=-16; N.comp.ratio.value=3; N.comp.attack.value=0.02; N.comp.release.value=0.4;
     N.lim=ctx.createDynamicsCompressor(); N.lim.threshold.value=-3; N.lim.knee.value=0; N.lim.ratio.value=20; N.lim.attack.value=0.002; N.lim.release.value=0.12;
-    N.master.connect(N.comp); N.comp.connect(N.lim); N.out=ctx.createGain(); N.lim.connect(N.out); N.out.connect(ctx.destination);
+    N.hpf=ctx.createBiquadFilter(); N.hpf.type='highpass'; N.hpf.Q.value=0.8; N.hpf.frequency.value=10;
+    N.lpf=ctx.createBiquadFilter(); N.lpf.type='lowpass'; N.lpf.Q.value=0.8; N.lpf.frequency.value=22000;
+    N.master.connect(N.hpf); N.hpf.connect(N.lpf);
+    // LOFI: banda de radio vieja + cuantización tipo sampler barato + crujido + cinta que tambalea (cruza seco/sucio)
+    N.lfDry=ctx.createGain(); N.lfWet=ctx.createGain(); N.lfWet.gain.value=0;
+    N.lfHP=ctx.createBiquadFilter(); N.lfHP.type='highpass'; N.lfHP.frequency.value=320; N.lfHP.Q.value=0.7;
+    N.lfLP=ctx.createBiquadFilter(); N.lfLP.type='lowpass'; N.lfLP.frequency.value=2800; N.lfLP.Q.value=1.1;
+    const cr=new Float32Array(4096); for(let i=0;i<4096;i++){const x=Math.tanh((i/2047.5-1)*2.2); cr[i]=Math.round(x*12)/12}
+    N.lfCrush=ctx.createWaveShaper(); N.lfCrush.curve=cr;
+    N.lfLP2=ctx.createBiquadFilter(); N.lfLP2.type='lowpass'; N.lfLP2.frequency.value=4200;
+    N.lpf.connect(N.lfDry); N.lfDry.connect(N.comp);
+    N.lpf.connect(N.lfHP); N.lfHP.connect(N.lfLP); N.lfLP.connect(N.lfCrush); N.lfCrush.connect(N.lfLP2); N.lfLP2.connect(N.lfWet); N.lfWet.connect(N.comp);
+    { const len=ctx.sampleRate*3, b=ctx.createBuffer(1,len,ctx.sampleRate), d=b.getChannelData(0);
+      for(let i=0;i<len;i++){d[i]=(Math.random()*2-1)*0.012; if(Math.random()<0.00045){const a=(Math.random()*2-1)*0.7; for(let k=0;k<40&&i+k<len;k++)d[i+k]+=a*Math.exp(-k/6)}}
+      N.lfNoise=ctx.createBufferSource(); N.lfNoise.buffer=b; N.lfNoise.loop=true; N.lfNoiseG=ctx.createGain(); N.lfNoiseG.gain.value=0;
+      const nf=ctx.createBiquadFilter(); nf.type='bandpass'; nf.frequency.value=1800; nf.Q.value=0.5;
+      N.lfNoise.connect(nf); nf.connect(N.lfNoiseG); N.lfNoiseG.connect(N.comp); N.lfNoise.start(); }
+    N.comp.connect(N.lim); N.out=ctx.createGain(); N.lim.connect(N.out); N.out.connect(ctx.destination);
     try{recDest=ctx.createMediaStreamDestination(); N.out.connect(recDest)}catch(e){recDest=null}
     N.an=ctx.createAnalyser(); N.an.fftSize=1024; N.out.connect(N.an);
     N.bus=ctx.createGain();
@@ -449,6 +505,8 @@ function store(key,def){let v=def; try{const s=JSON.parse(localStorage.getItem(k
     N.wow=ctx.createOscillator(); N.wow.frequency.value=0.45; N.flut=ctx.createOscillator(); N.flut.frequency.value=6.2;
     N.wowG=ctx.createGain(); N.flutG=ctx.createGain(); N.wow.connect(N.wowG); N.flut.connect(N.flutG);
     N.tape=ctx.createGain(); N.wowG.connect(N.tape); N.flutG.connect(N.tape); N.wow.start(); N.flut.start();
+    N.pitch=ctx.createConstantSource(); N.pitch.offset.value=0; N.pitch.connect(N.tape); N.pitch.start();
+    N.lfWob=ctx.createOscillator(); N.lfWob.frequency.value=1.4; N.lfWobG=ctx.createGain(); N.lfWobG.gain.value=0; N.lfWob.connect(N.lfWobG); N.lfWobG.connect(N.tape); N.lfWob.start();
     // respiración: LFO muy lento al filtro
     N.breath=ctx.createOscillator(); N.breath.frequency.value=0.06; N.breathG=ctx.createGain(); N.breath.connect(N.breathG); N.breathG.connect(N.tone.frequency); N.breath.start();
     // polvo
@@ -472,6 +530,9 @@ function store(key,def){let v=def; try{const s=JSON.parse(localStorage.getItem(k
     const fz=(st.fuzz||0)/100; r(N.fzDry.gain,1-fz); r(N.fzPre.gain,1+fz*fz*40); r(N.fzWet.gain,fz*0.28); r(N.fzLP.frequency,5200-fz*2600);
     const mt=(st.metal||0)/100; r(N.rmDry.gain,1-mt*0.9); r(N.rmWet.gain,mt*1.5); r(N.rmOsc.frequency,mtof(st.key+57)*(0.5+mt*1.47)); r(N.rmDriftG.gain,mt*25);
     const sw=(st.swirl||0)/100; r(N.flFb.gain,sw*0.82); r(N.flWet.gain,sw*0.85); r(N.flDry.gain,1-sw*0.25); r(N.flLfo.frequency,0.08+sw*0.35);
+    const hpOn=(st.hpf||0)>0, lpOn=(st.lpf??100)<100;
+    r(N.hpf.frequency,hpOn?hpfHz(st.hpf):10); r(N.lpf.frequency,lpOn?lpfHz(st.lpf):22000);
+    N.pitch.offset.setTargetAtTime(pitchSt(st.pitch||0)*100,t,first?0.001:0.02);
     const want=(2.5+sp*7).toFixed(1);
     if(want!==impulseKey){impulseKey=want; clearTimeout(applyParams.t); applyParams.t=setTimeout(()=>{N.verb.buffer=makeImpulse(+want)},first?0:250)}
   }
@@ -683,6 +744,38 @@ function store(key,def){let v=def; try{const s=JSON.parse(localStorage.getItem(k
   });
 
   window.NS={st,S,init:()=>init(),ensure:async()=>{init(); await ctx.resume(); return ctx},get ctx(){return ctx},nodes,RECIPES,makeGroup,killGroup,chordFor,press,release,mtof,capaSubs,getActive:()=>active,toast,NOTES,SCALE,DEGREES,SOLF};
+  /* ---- PITCH con rebote: al soltarlo (o si un knob MIDI deja de moverse) vuelve solo a 0 ---- */
+  (function(){
+    const inp=$('k_pitch'), lab=inp.closest('label'); let held=false, idle=null, anim=0, own=false;
+    const set=v=>{own=true; inp.value=v; inp.dispatchEvent(new Event('input',{bubbles:true})); own=false};
+    function spring(){
+      cancelAnimationFrame(anim); const v0=+inp.value; if(Math.abs(v0)<1){if(v0)set(0); return}
+      const t0=performance.now();
+      const step=now=>{const t=(now-t0)/1000, v=v0*Math.exp(-t/0.16)*Math.cos(2*Math.PI*2.6*t);
+        if(held)return; if(t>1.2||Math.abs(v)<0.6){set(0); return} set(Math.round(v)); anim=requestAnimationFrame(step)};
+      anim=requestAnimationFrame(step);
+    }
+    lab.addEventListener('pointerdown',()=>{held=true; cancelAnimationFrame(anim)});
+    addEventListener('pointerup',()=>{if(held){held=false; spring()}}); addEventListener('pointercancel',()=>{if(held){held=false; spring()}});
+    inp.addEventListener('input',()=>{if(own||held)return; clearTimeout(idle); cancelAnimationFrame(anim); idle=setTimeout(spring,220)});
+    lab.addEventListener('keyup',()=>{clearTimeout(idle); idle=setTimeout(spring,150)});
+    window.NS_pitchSpring=spring;
+  })();
+  /* ---- LOFI: mientras está apretado ---- */
+  (function(){
+    const b=$('lofiBtn'); let on=false;
+    function lofi(v){ if(on===v)return; on=v; b.setAttribute('aria-pressed',v);
+      if(!ctx)init(); try{ctx.resume()}catch(e){}
+      const N=nodes,t=ctx.currentTime,T=v?0.03:0.12, r=(p,x)=>p.setTargetAtTime(x,t,T);
+      r(N.lfDry.gain,v?0:1); r(N.lfWet.gain,v?1.15:0); r(N.lfNoiseG.gain,v?1:0); r(N.lfWobG.gain,v?28:0); }
+    b.addEventListener('pointerdown',e=>{e.preventDefault(); b.setPointerCapture(e.pointerId); lofi(true)});
+    ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>lofi(false)));
+    addEventListener('keydown',e=>{if(e.code==='KeyL'&&!e.repeat&&!e.target.matches('input,select,textarea')&&!e.metaKey&&!e.ctrlKey)lofi(true)});
+    addEventListener('keyup',e=>{if(e.code==='KeyL')lofi(false)});
+    addEventListener('blur',()=>lofi(false));
+    window.NS_lofi=lofi;
+  })();
+
   renderKnobs(); renderPads(); renderPresets(); $('voiceLabel').textContent=timbreName(); setStatus();
   setBpm(st.bpm); renderGrid(); renderBeatPresets();
   requestAnimationFrame(frame);
@@ -693,5 +786,6 @@ function store(key,def){let v=def; try{const s=JSON.parse(localStorage.getItem(k
 <script src="niebla-vocoder.js"></script>
 <script src="niebla-rec.js"></script>
 <script src="niebla-ui.js"></script>
+<script src="niebla-live.js"></script>
 </body>
 </html>

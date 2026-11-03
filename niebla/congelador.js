@@ -115,7 +115,7 @@
     function grain(t){
       const len=buf.duration, size=st.size/1000, rate=Math.pow(2,st.pitch/12)*(1+(Math.random()*2-1)*0.004*st.spread/100);
       let p=st.pos/100+drift+(Math.random()*2-1)*st.spread/100*0.25; p=((p%1)+1)%1;
-      const rev=st.rev&&Math.random()<0.5, src=ctx.createBufferSource(); src.buffer=rev?rbuf:buf; src.playbackRate.value=rate;
+      const rev=st.rev&&Math.random()<0.5, src=ctx.createBufferSource(); src.buffer=rev?rbuf:buf; src.playbackRate.value=rate; if(window.NS&&NS.nodes&&NS.nodes.pitch)try{NS.nodes.pitch.connect(src.detune)}catch(e){}
       let off=p*len; if(rev)off=len-off; off=H.clamp(off,0,Math.max(0,len-size*rate-0.01));
       const g=ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.6,t+size/2); g.gain.linearRampToValueAtTime(0,t+size);
       let node=g; if(ctx.createStereoPanner){const pn=ctx.createStereoPanner(); pn.pan.value=(Math.random()*2-1)*0.7; g.connect(pn); node=pn}

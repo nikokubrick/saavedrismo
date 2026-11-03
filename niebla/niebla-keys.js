@@ -38,7 +38,7 @@
   window.NS_afterMix=function(c,nodes){
     ctx=c; N=nodes; KX={};
     KX.noise=(()=>{const len=ctx.sampleRate, b=ctx.createBuffer(1,len,ctx.sampleRate), d=b.getChannelData(0); for(let i=0;i<len;i++)d[i]=Math.random()*2-1; return b})();
-    KX.bend=ctx.createConstantSource(); KX.bend.offset.value=bendCents; KX.bend.start();
+    KX.bend=ctx.createConstantSource(); KX.bend.offset.value=bendCents; KX.bend.start(); if(NS.nodes.pitch)NS.nodes.pitch.connect(KX.bend.offset);
     KX.bus=ctx.createGain();
     // chorus estilo Juno (dos líneas moduladas, una a cada lado)
     KX.tremIn=ctx.createGain(); KX.chDry=ctx.createGain(); KX.chWet=ctx.createGain(); KX.chWet.gain.value=0;

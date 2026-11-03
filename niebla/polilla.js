@@ -116,7 +116,7 @@
     function note(t,m,vel){
       const w=st.wear/100, f=H.mtof(m), g=ctx.createGain(), oscs=[];
       const det=(Math.random()*2-1)*w*30;
-      const add=(type,mul,amp,dec)=>{const o=ctx.createOscillator(), a=ctx.createGain(); o.type=type; o.frequency.value=f*mul; o.detune.value=det; B.wowG.connect(o.detune);
+      const add=(type,mul,amp,dec)=>{const o=ctx.createOscillator(), a=ctx.createGain(); o.type=type; o.frequency.value=f*mul; o.detune.value=det; B.wowG.connect(o.detune); if(window.NS&&NS.nodes&&NS.nodes.pitch)NS.nodes.pitch.connect(o.detune);
         a.gain.setValueAtTime(0.0001,t); a.gain.exponentialRampToValueAtTime(amp*vel,t+0.004); a.gain.exponentialRampToValueAtTime(0.0001,t+dec);
         o.connect(a); a.connect(B.in); o.start(t); o.stop(t+dec+0.05); oscs.push(o)};
       if(st.timbre==='caja'){add('sine',1,0.42,1.8); add('sine',2,0.12,0.9); add('sine',5.4,0.06,0.25)}

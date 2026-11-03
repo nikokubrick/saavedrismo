@@ -99,7 +99,7 @@
       g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.5,t+0.004);
       g.gain.setValueAtTime(0.5,t+dec*0.3); g.gain.exponentialRampToValueAtTime(0.0001,t+dec+0.15); g.connect(B.f);
       const os=st.timbre==='pulso'?[['sawtooth',1,0.35],['square',0.5,0.18]]:st.timbre==='cuerda'?[['triangle',1,0.5],['sawtooth',1,0.08]]:[['sine',1,0.45],['sine',3.01,0.1]];
-      os.forEach(([ty,mul,a])=>{const o=ctx.createOscillator(),ga=ctx.createGain(); o.type=ty; o.frequency.value=f*mul; o.detune.value=Math.random()*6-3; ga.gain.value=a; o.connect(ga); ga.connect(g); o.start(t); o.stop(t+dec+0.2)});
+      os.forEach(([ty,mul,a])=>{const o=ctx.createOscillator(),ga=ctx.createGain(); o.type=ty; o.frequency.value=f*mul; o.detune.value=Math.random()*6-3; if(window.NS&&NS.nodes&&NS.nodes.pitch)NS.nodes.pitch.connect(o.detune); ga.gain.value=a; o.connect(ga); ga.connect(g); o.start(t); o.stop(t+dec+0.2)});
     }
     let playing=false,nextT=0,idx=0,dir=1,timer=0,q=[];
     function pick(n){
