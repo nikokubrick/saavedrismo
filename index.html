@@ -95,7 +95,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--tinta);outline-offs
 .pelis-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:48px;align-items:start;margin-top:40px}
 .pantalla-yt{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0b1428 radial-gradient(120% 90% at 30% 20%,#2a3d63 0,#0b1428 70%);box-shadow:0 30px 60px -30px rgba(0,0,0,.7),0 0 0 1px rgba(234,242,250,.12)}
 .pantalla-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.pantalla-yt .pronto{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:8px;padding:24px}
+.pantalla-yt .pronto{text-decoration:none;position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:8px;padding:24px}
 .pantalla-yt .pronto b{font-family:"Anton",sans-serif;font-weight:400;font-size:clamp(30px,4vw,48px);letter-spacing:.02em;color:var(--logo);text-transform:uppercase}
 .pantalla-yt .pronto span{color:#c4d4e8;font-size:16px}
 .pantalla-yt button{position:absolute;inset:0;width:100%;border:0;padding:0;cursor:pointer;background:transparent;color:var(--blanco);display:grid;place-content:center;gap:12px;font:inherit}
@@ -292,8 +292,8 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
 
     <div class="pelis-grid">
       <!-- Para publicar el video: poner el id de YouTube en data-yt (lo que va después de "v=" en el enlace) -->
-      <div class="pantalla-yt" data-yt="" data-titulo="Lluvia en Alaró">
-        <div class="pronto"><b>Muy pronto</b><span>Se estrena en YouTube</span></div>
+      <div class="pantalla-yt" data-yt="_ku29HrGDwc" data-titulo="Lluvia en Alaró · Música para films del futuro Nº 1">
+        <a class="pronto" href="https://youtu.be/_ku29HrGDwc"><b>Ver en YouTube</b><span>Lluvia en Alaró · 14 minutos</span></a>
       </div>
       <div class="ficha-peli">
         <h3>Nº 1 · Lluvia en Alaró</h3>
@@ -303,6 +303,7 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
           <dt>Instrumento</dt><dd><a href="#niebla">Niebla Studio</a>, que se baja gratis más abajo</dd>
           <dt>Lugar</dt><dd>Alaró, Mallorca</dd>
         </dl>
+        <p><a href="https://youtu.be/_ku29HrGDwc">Verlo en YouTube</a> · <a href="https://www.youtube.com/@SaavedrismoMusica">Suscribirte al canal</a></p>
       </div>
     </div>
   </div>
