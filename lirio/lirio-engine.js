@@ -3,8 +3,10 @@
 'use strict';
 const kTwoPi = Math.PI * 2;
 const kMaxVoices = 32, kMaxEvents = 512, kMaxHeld = 16;
-const CT_Auto = 0, CT_Maj = 1, CT_Min = 2, CT_Sus2 = 3, CT_Sus4 = 4, CT_Dom7 = 5, CT_Maj7 = 6, CT_Min7 = 7, CT_Dim = 8;
-const P_Chord = 0, P_Strum = 1, P_Slop = 2, P_Arp = 3, P_Harp = 4;
+const CB_Maj = 1, CB_Min = 2, CB_Dim = 4, CB_Sus2 = 8, CB_Sus4 = 16, CB_Six = 32, CB_Seven = 64, CB_Maj7 = 128, CB_Nine = 256, kThirdBits = 7;
+const P_Chord = 0, P_Strum = 1, P_Slop = 2, P_Arp = 3, P_Harp = 4, P_Pattern = 5;
+const RHYTHMS = ['X---x---x---x---', 'X-x-x-x-X-x-x-x-', 'X-----x---------', 'X--x--x-X--x--x-', '..x-..x-..x-..x-', 'X--x--x---x-x---',
+  'X--x--x---x--x--', 'X.xx.x.xX.x..xx.', 'X.xxX.xxX.xxX.xx', 'X-.x-.x-.x-.xx-.', 'X-------x--x-x--'];
 const E_Analog = 0, E_FM = 1, E_Reed = 2;
 
 const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
@@ -135,19 +137,37 @@ class Voice {
   }
 }
 class Bass {
-  constructor() { this.active = false; this.note = 36; this.vel = 1; this.amp = new Adsr(); this.ph = 0; this.ph2 = 0; this.lp = 0; this.tag = 0; }
-  start(n, v, t, sr) { this.note = n; this.vel = v; this.tag = t; this.active = true; this.amp.set(0.004, 0.6, 0.75, 0.18, sr); this.amp.on(); }
+  constructor() { this.active = false; this.note = 36; this.vel = 1; this.amp = new Adsr(); this.ph = 0; this.ph2 = 0; this.lp = 0; this.fenv = 0; this.tag = 0; this.flt = new Svf(); }
+  start(n, v, t, sr, sound) {
+    this.note = n; this.vel = v; this.tag = t; this.active = true; this.fenv = 1;
+    if (sound === 4) this.amp.set(0.002, 0.9, 0.35, 0.15, sr);
+    else if (sound === 5) this.amp.set(0.002, 0.35, 0.55, 0.12, sr);
+    else this.amp.set(0.004, 0.6, 0.75, 0.18, sr);
+    this.amp.on();
+  }
+  glide(n, t) { this.note = n; this.tag = t; }
   stop() { this.amp.off(); }
   render(p, sr, bend) {
     if (!this.active) return 0;
     const e = this.amp.next(); if (this.amp.st === Idle) { this.active = false; return 0; }
-    const f = mtof(this.note) * bend, dt = f / sr;
-    const sine = Math.sin(kTwoPi * this.ph);
-    const saw = 2 * this.ph2 - 1 - polyblep(this.ph2, dt);
+    const f = mtof(this.note) * bend, dt = f / sr, tn = p.bassTone, ph = this.ph, ph2 = this.ph2;
+    let out = 0;
+    this.fenv *= Math.exp(-1 / (sr * (p.bassSound === 5 ? 0.12 : 0.25)));
+    switch (p.bassSound) {
+      case 1: { const saw = 2 * ph2 - 1 - polyblep(ph2, dt); this.flt.set(90 + 2600 * tn * tn * (0.35 + 0.65 * this.fenv) + f * 1.5, 0.25, sr); out = this.flt.lp(saw) * 0.75; break; }
+      case 2: { const sq = (ph2 < 0.5 ? 1 : -1) + polyblep(ph2, dt) - polyblep((ph2 + 0.5) % 1, dt); this.flt.set(120 + 2200 * tn * tn, 0.15, sr); out = this.flt.lp(sq) * 0.3 + 0.28 * Math.sin(kTwoPi * ph); break; }
+      case 3: { const x = Math.sin(kTwoPi * ph) + 0.15 * Math.sin(2 * kTwoPi * ph); const g = 1 + 3 * tn; out = Math.tanh(x * g) / Math.tanh(g) * 0.5; break; }
+      case 4: { const I = (0.5 + 4 * tn) * (0.2 + 0.8 * this.fenv); out = Math.sin(kTwoPi * ph + I * Math.sin(kTwoPi * ph2)) * 0.7; break; }
+      case 5: { const saw = 2 * ph2 - 1 - polyblep(ph2, dt); this.flt.set(110 + 3800 * (0.15 + 0.85 * tn) * this.fenv * this.fenv + f, 0.86, sr); out = Math.tanh(this.flt.lp(saw) * 1.6) * 0.6; break; }
+      default: {
+        const sine = Math.sin(kTwoPi * ph), saw = 2 * ph2 - 1 - polyblep(ph2, dt);
+        const c = 1 - Math.exp(-kTwoPi * (120 + 1800 * tn * tn) / sr);
+        this.lp += c * (saw - this.lp);
+        out = 0.75 * sine + 0.5 * tn * this.lp + 0.15 * this.lp;
+      }
+    }
     this.ph += dt; if (this.ph >= 1) this.ph -= 1; this.ph2 += dt; if (this.ph2 >= 1) this.ph2 -= 1;
-    const c = 1 - Math.exp(-kTwoPi * (120 + 1800 * p.bassTone * p.bassTone) / sr);
-    this.lp += c * (saw - this.lp);
-    return (0.75 * sine + 0.5 * p.bassTone * this.lp + 0.15 * this.lp) * e * (0.6 + 0.4 * this.vel) * p.bassLevel * 0.55;
+    return out * e * (0.6 + 0.4 * this.vel) * p.bassLevel * 0.55;
   }
 }
 class DelayLine {
@@ -257,7 +277,8 @@ class DrumKit {
       m += x;
       if (d.type === D_Hat) side += x * 0.35; else if (d.type === D_TomHi) side -= x * 0.4; else if (d.type === D_TomLo) side += x * 0.4;
     }
-    let l = Math.tanh((m - side) * 1.3), r = Math.tanh((m + side) * 1.3);
+    const dg = 1.3 * (1 + 4 * p.drumDrive), dc = 1 / (1 + 0.8 * p.drumDrive);
+    let l = Math.tanh((m - side) * dg) * dc, r = Math.tanh((m + side) * dg) * dc;
     const c = 0.35 + 0.6 * p.drumTone; this.warm += c * (l - this.warm); this.warmR += c * (r - this.warmR); l = this.warm; r = this.warmR;
     const pk = Math.max(Math.abs(l), Math.abs(r));
     this.env += (pk > this.env ? this.atk : this.rel) * (pk - this.env);
@@ -280,6 +301,66 @@ class DrumKit {
 const SCL = [[0, 2, 4, 5, 7, 9, 11], [0, 2, 3, 5, 7, 8, 10]];
 const RATES = [1, 0.5, 1 / 3, 0.25, 1 / 6, 0.125];
 const DTIMES = [1, 0.75, 0.5, 0.25, 2 / 3];
+const popcount = m => { let c = 0; while (m) { m &= m - 1; ++c; } return c; };
+
+// intervalos del acorde (bits 0..23) — igual que chordIntervals() de Engine.h
+function chordIntervals(pc, mask, key, scale, complexity) {
+  let third = 4, fifth = 7, dSev = 10;
+  const hasThird = (mask & kThirdBits) !== 0;
+  if (mask & CB_Maj) { third = 4; fifth = 7; }
+  else if (mask & CB_Min) { third = 3; fifth = 7; }
+  else if (mask & CB_Dim) { third = 3; fifth = 6; }
+  else {
+    const sc = SCL[scale ? 1 : 0], rel = ((pc - key) % 12 + 12) % 12;
+    let d = -1; for (let k = 0; k < 7; k++) if (sc[k] === rel) d = k;
+    if (d >= 0) {
+      third = (sc[(d + 2) % 7] - rel + 12) % 12; fifth = (sc[(d + 4) % 7] - rel + 12) % 12; dSev = (sc[(d + 6) % 7] - rel + 12) % 12;
+      if (dSev !== 10 && dSev !== 11) dSev = 10;
+    }
+  }
+  const s2 = (mask & CB_Sus2) !== 0, s4 = (mask & CB_Sus4) !== 0;
+  let six = (mask & CB_Six) !== 0, sev = (mask & CB_Seven) !== 0, maj7 = (mask & CB_Maj7) !== 0, nine = (mask & CB_Nine) !== 0;
+  let m = 1;
+  if ((s2 || s4) && !hasThird) { if (s2) m |= 1 << 2; if (s4) m |= 1 << 5; }
+  else { m |= 1 << third; if (s2) m |= 1 << 2; if (s4) m |= 1 << 5; }
+  m |= 1 << fifth;
+  const sevIv = hasThird ? 10 : dSev;
+  if (complexity === 0) { if (maj7) { sev = six = nine = false; } else if (sev) { six = nine = false; } else if (six) nine = false; }
+  if (complexity === 1 && maj7 && sev) sev = false;
+  if (six) m |= 1 << ((complexity === 1 && (sev || maj7)) ? 21 : 9);
+  if (sev) m |= 1 << sevIv;
+  if (maj7) m |= 1 << 11;
+  if (nine) m |= 1 << 14;
+  const lim = complexity === 0 ? 4 : complexity === 1 ? 6 : 99;
+  if (popcount(m) > lim && (m & (1 << 7))) m &= ~(1 << 7);
+  return m;
+}
+function chordSuffix(m) {
+  const has = i => ((m >> i) & 1) !== 0;
+  const t4 = has(4), t3 = has(3), b5 = has(6) && !has(7), sev = has(10), maj7 = has(11), six = has(9), thir = has(21), nine = has(14), s2 = has(2), s4 = has(5);
+  let s;
+  if (t3 && b5 && !t4) { s = sev ? 'm7b5' : six ? 'dim7' : 'dim'; if (maj7) s += '(maj7)'; if (nine) s += '(add9)'; }
+  else {
+    const q = t3 && !t4 ? 'm' : '';
+    if (sev || maj7) {
+      const ext = thir ? '13' : nine ? '9' : '7';
+      if (maj7 && sev) s = q + ext + '(maj7)'; else if (maj7) s = q === '' ? 'maj' + ext : 'm(maj' + ext + ')'; else s = q + ext;
+      if (six && !thir) s += '(add6)';
+    } else if (six || thir) s = q + (nine ? '6/9' : '6');
+    else { s = q; if (nine) s += 'add9'; }
+  }
+  if (!t3 && !t4) s += s4 ? (s2 ? 'sus2sus4' : 'sus4') : (s2 ? 'sus2' : '5');
+  else { if (s2) s += '(add2)'; if (s4) s += '(add4)'; }
+  const n = popcount(m);
+  const tag = (sev && maj7) || (t3 && t4) || n >= 7 ? 2 : (n >= 5 ? 1 : 0);
+  return { s, tag };
+}
+function rotate(arr, v) {
+  while (v > 0) { arr.push(arr.shift() + 12); --v; }
+  while (v < 0) { arr.unshift(arr.pop() - 12); ++v; }
+  return arr;
+}
+const L_Empty = 0, L_Armed = 1, L_Rec = 2, L_Play = 3, L_Dub = 4, L_Stop = 5;
 
 class Engine {
   constructor(sr) {
@@ -287,54 +368,85 @@ class Engine {
     this.bass = new Bass();
     this.chL = new DelayLine(); this.chL.init(Math.floor(sr * 0.05)); this.chR = new DelayLine(); this.chR.init(Math.floor(sr * 0.05));
     this.dlL = new DelayLine(); this.dlL.init(Math.floor(sr * 2.6)); this.dlR = new DelayLine(); this.dlR.init(Math.floor(sr * 2.6));
-    this.rev = new Reverb(); this.rev.init(sr); this.drums = new DrumKit(); this.drums.prepare(sr);
+    this.flDl = new DelayLine(); this.flDl.init(Math.floor(sr * 0.02));
+    this.rev = new Reverb(); this.rev.init(sr); this.drumRev = new Reverb(); this.drumRev.init(sr); this.drums = new DrumKit(); this.drums.prepare(sr);
     this.evs = []; this.held = []; this.nowS = 0; this.tagCounter = 1; this.ageCtr = 0; this.arpOn = false; this.dlLp = 0; this.dlRp = 0;
     this.smK = 1 - Math.exp(-1 / (0.03 * sr)); this.smKd = 1 - Math.exp(-1 / (0.15 * sr));
     this.limRel = 1 - Math.exp(-1 / (0.15 * sr)); this.limGain = 1; this.smInit = false;
     this.bend = 1; this.mod = 0; this.lfoPh = 0; this.lfo2 = 0; this.chPh = 0; this.sustainPedal = false; this.strumDown = false;
     this.arpNext = 0; this.arpOffAt = 0; this.arpIdx = 0; this.arpVoiceTag = 0; this.rng = new Rng(0x12345678);
-    this.ksType = -1; this.ui = { root: -1, type: 0, minor: 0, dim: 0, act: 0, ks: -1 };
-    this.revOut = [0, 0]; this.drumOut = [0, 0];
+    this.patOn = false; this.patNext = 0; this.patStep = 0; this.patTag = 0;
+    this.prev = []; this.ksHeld = 0; this.ksThird = 0;
+    this.cutF1 = new Svf(); this.cutF2 = new Svf(); this.apS = new Float64Array(6); this.phLfo = 0; this.phFb = 0; this.flLfo = 0; this.flFb = 0;
+    this.ui = { root: -1, iv: 0, act: 0, ks: 0, patStep: -1 };
+    this.revOut = [0, 0]; this.drumOut = [0, 0]; this.drumRevOut = [0, 0];
+    // looper
+    this.loopState = L_Empty; this.loopEv = []; this.loopLen = 0; this.loopPos = 0; this.loopIdx = 0; this.loopLayer = 0; this.loopLayers = 0; this.loopBpm = 120;
+    this.playOn = new Uint8Array(128); this.userOn = new Int32Array(128);
   }
-  effectiveType(p) { return this.ksType >= 0 ? this.ksType : p.chordType; }
-  chordNotes(key, p) {
-    const pc = key % 12, type = this.effectiveType(p);
-    let iv;
-    switch (type) {
-      case CT_Maj: iv = [0, 4, 7]; break; case CT_Min: iv = [0, 3, 7]; break;
-      case CT_Sus2: iv = [0, 2, 7]; break; case CT_Sus4: iv = [0, 5, 7]; break;
-      case CT_Dom7: iv = [0, 4, 7, 10]; break; case CT_Maj7: iv = [0, 4, 7, 11]; break;
-      case CT_Min7: iv = [0, 3, 7, 10]; break; case CT_Dim: iv = [0, 3, 6]; break;
-      default: {
-        const sc = SCL[p.scale ? 1 : 0], rel = (pc - p.key + 12) % 12;
-        let d = -1; for (let k = 0; k < 7; k++) if (sc[k] === rel) d = k;
-        if (d < 0) iv = [0, 4, 7];
-        else iv = [0, (sc[(d + 2) % 7] - rel + 12) % 12, (sc[(d + 4) % 7] - rel + 12) % 12];
+  isKeySwitch(key, p) { return p.keySwitch && p.mode === 0 && key >= 24 && key <= 32; }
+  effMask(p) { let m = p.chordMask; if (this.ksHeld & kThirdBits) m &= ~kThirdBits; m |= this.ksHeld & ~kThirdBits; m |= this.ksThird; return m; }
+  bassNote(key, p) { let bn = (p.followOct ? key : 48 + key % 12) + 12 * p.octave - 12 * (p.bassOct + 1); while (bn < 28) bn += 12; return bn; }
+  baseNotes(key, p, mask) {
+    const m = chordIntervals(key % 12, mask, p.key, p.scale, p.complexity);
+    const root = (p.followOct ? key : 48 + key % 12) + 12 * p.octave;
+    const arr = []; for (let i = 0; i < 24; i++) if ((m >> i) & 1) arr.push(root + i);
+    return arr.slice(0, 8);
+  }
+  voiceChord(key, p, mask) {
+    let arr = this.baseNotes(key, p, mask); const n = arr.length, prev = this.prev;
+    if (p.voiceLead && prev.length) {
+      let best = null, bestCost = Infinity;
+      for (let inv = -n; inv <= n; inv++) {
+        const c = rotate(arr.slice(), inv);
+        if (c[0] < 28 || c[n - 1] > 100) continue;
+        let cost = 0;
+        for (const a of c) { let d = 999; for (const b of prev) d = Math.min(d, Math.abs(a - b)); cost += d; }
+        for (const b of prev) { let d = 999; for (const a of c) d = Math.min(d, Math.abs(a - b)); cost += d; }
+        cost = cost * 4 + Math.abs(inv);
+        if (cost < bestCost) { bestCost = cost; best = c; }
       }
+      if (best) arr = best;
     }
-    if (p.add9) iv = iv.concat([14]);
-    const root = (p.followOct ? key : 48 + pc) + 12 * p.octave;
-    const arr = iv.map(x => root + x).sort((a, b) => a - b);
-    let v = p.voicing;
-    while (v > 0) { arr.push(arr.shift() + 12); --v; }
-    while (v < 0) { arr.unshift(arr.pop() - 12); ++v; }
-    return arr.map(x => Math.min(120, Math.max(12, x)));
+    this.prev = arr.slice();
+    return rotate(arr, p.voicing).map(x => Math.min(120, Math.max(12, x)));
   }
-  noteOn(key, vel, p) {
-    if (p.keySwitch && p.mode === 0 && key >= 24 && key <= 32) { this.ksType = key - 24; this.ui.ks = this.ksType; this.ui.act++; return; }
+  userNoteOn(key, vel, p) {
+    if (this.isKeySwitch(key, p)) { this.noteOn(key, vel, p); return; }
+    if (this.loopState === L_Armed) this.startLoopRec(p);
+    const mask = this.effMask(p);
+    if (this.loopState === L_Rec || this.loopState === L_Dub) { this.recordEv(key, vel, true, mask, p); this.userOn[key & 127] = mask + 1; }
+    this.noteOn(key, vel, p);
+  }
+  userNoteOff(key, p) {
+    if (!this.isKeySwitch(key, p) && (this.loopState === L_Rec || this.loopState === L_Dub) && this.userOn[key & 127]) this.recordEv(key, 0, false, 0, p);
+    this.userOn[key & 127] = 0;
+    this.noteOff(key, p);
+  }
+  noteOn(key, vel, p, maskOverride = -1) {
+    if (this.isKeySwitch(key, p)) { const bit = 1 << (key - 24); this.ksHeld |= bit; if (bit & kThirdBits) this.ksThird = bit; this.ui.ks = this.ksHeld; this.ui.act++; return; }
     this.ui.act++;
-    if (p.hold && p.mode === 0) {
+    const mask = maskOverride >= 0 ? maskOverride : this.effMask(p);
+    const solo = p.mode === 0 && p.bassOn && p.bassMode === 1;
+    if (p.hold && p.mode === 0 && !solo) {
       const same = this.held.length > 0 && this.held[this.held.length - 1].key === key;
       for (const h of this.held) this.releaseHeld(h);
       this.held = [];
-      if (same) { this.stopArp(); this.ui.root = -1; return; }
+      if (same) { this.stopPerf(); this.ui.root = -1; return; }
     }
     this.removeHeld(key);
     if (this.held.length >= kMaxHeld) { this.releaseHeld(this.held[0]); this.held.shift(); }
-    const H = { key, vel, tag: this.tagCounter++, pedalHeld: false, notes: p.mode === 0 ? this.chordNotes(key, p) : [key + 12 * p.octave] };
+    const H = { key, vel, tag: this.tagCounter++, pedalHeld: false, notes: [] };
     this.held.push(H);
-    const t0 = this.nowS, n = H.notes.length, sr = this.sr;
+    const t0 = this.nowS, sr = this.sr;
+    if (solo) { this.pushEv(t0, 2, this.bassNote(key, p), vel, H.tag); this.ui.root = key; this.ui.iv = -1; return; }
+    H.notes = p.mode === 0 ? this.voiceChord(key, p, mask) : [key + 12 * p.octave];
+    const n = H.notes.length;
     if (p.perf === P_Arp) { if (!this.arpOn) { this.arpOn = true; this.arpNext = t0; this.arpIdx = 0; } }
+    else if (p.perf === P_Pattern) {
+      if (!this.patOn) { this.patOn = true; this.patNext = t0; this.patStep = 0; }
+      else { if (this.patTag) this.stopTag(this.patTag); this.patTag = this.tagCounter++; for (let i = 0; i < n; i++) this.pushEv(t0, 1, H.notes[i], vel, this.patTag); }
+    }
     else if (p.perf === P_Strum) {
       const down = this.strumDown; this.strumDown = !this.strumDown;
       for (let i = 0; i < n; i++) this.pushEv(t0 + Math.floor(i * p.strumMs * 0.001 * sr), 1, H.notes[down ? n - 1 - i : i], vel, H.tag);
@@ -348,37 +460,46 @@ class Engine {
       const step = 0.025 + p.strumMs * 0.0009; let k = 0;
       for (let o = 0; o < 3; o++) for (let i = 0; i < n; i++, k++) this.pushEv(t0 + Math.floor(k * step * sr), 1, H.notes[i] + 12 * o, vel * (1 - 0.02 * k), H.tag);
     } else for (let i = 0; i < n; i++) this.pushEv(t0, 1, H.notes[i], vel, H.tag);
-    if (p.bassOn && p.mode === 0) {
-      let bn = (p.followOct ? key : 48 + key % 12) + 12 * p.octave - 12 * (p.bassOct + 1);
-      while (bn < 28) bn += 12;
-      this.pushEv(t0, 2, bn, vel, H.tag);
-    }
-    this.publishChord(key, p);
+    if (p.bassOn && p.mode === 0) this.pushEv(t0, 2, this.bassNote(key, p), vel, H.tag);
+    this.publishChord(key, p, mask);
   }
   noteOff(key, p) {
-    if (p.keySwitch && p.mode === 0 && key >= 24 && key <= 32) return;
+    if (this.isKeySwitch(key, p)) {
+      const bit = 1 << (key - 24); this.ksHeld &= ~bit;
+      if (this.ksThird === bit) this.ksThird = this.ksHeld & kThirdBits ? (this.ksHeld & CB_Dim ? CB_Dim : this.ksHeld & CB_Min ? CB_Min : CB_Maj) : 0;
+      this.ui.ks = this.ksHeld; return;
+    }
     if (this.sustainPedal) { for (const h of this.held) if (h.key === key) h.pedalHeld = true; return; }
-    if (p.hold && p.mode === 0) return;
+    const solo = p.mode === 0 && p.bassOn && p.bassMode === 1;
+    if (p.hold && p.mode === 0 && !solo) return;
+    const top = this.held[this.held.length - 1];
+    if (solo && this.held.length > 1 && top.key === key && this.bass.active && this.bass.tag === top.tag) {
+      this.removeHeld(key); const nt = this.held[this.held.length - 1];
+      this.bass.glide(this.bassNote(nt.key, p), nt.tag); this.ui.root = nt.key; return;
+    }
     for (const h of this.held) if (h.key === key) this.releaseHeld(h);
     this.removeHeld(key);
-    if (this.held.length === 0) this.stopArp();
+    if (this.held.length === 0) this.stopPerf();
   }
   sustain(on, p) {
     this.sustainPedal = on;
     if (!on) {
       this.held = this.held.filter(h => { if (h.pedalHeld) { this.releaseHeld(h); return false; } return true; });
-      if (this.held.length === 0 && !p.hold) this.stopArp();
+      if (this.held.length === 0 && !p.hold) this.stopPerf();
     }
   }
-  allOff() { for (const v of this.voices) v.stop(); this.bass.stop(); this.held = []; this.evs = []; this.arpOn = false; this.ui.root = -1; }
-  stopArp() { this.arpOn = false; if (this.arpVoiceTag) { this.stopTag(this.arpVoiceTag); this.arpVoiceTag = 0; } }
+  allOff() { for (const v of this.voices) v.stop(); this.bass.stop(); this.held = []; this.evs = []; this.arpOn = false; this.patOn = false; this.ui.root = -1; }
+  stopPerf() {
+    this.arpOn = false; if (this.arpVoiceTag) { this.stopTag(this.arpVoiceTag); this.arpVoiceTag = 0; }
+    this.patOn = false; if (this.patTag) { this.stopTag(this.patTag); this.patTag = 0; } this.ui.patStep = -1;
+  }
   pushEv(t, type, note, vel, tag) { if (this.evs.length < kMaxEvents) this.evs.push({ t, type, note, vel, tag }); }
   processEvents(t, p) {
     if (!this.evs.length) return;
     for (let k = 0; k < this.evs.length;) {
       const e = this.evs[k];
       if (e.t <= t) { this.evs[k] = this.evs[this.evs.length - 1]; this.evs.pop();
-        if (e.type === 1) this.startVoice(e.note, e.vel, e.tag, p); else if (e.type === 2) this.bass.start(e.note, e.vel, e.tag, this.sr); }
+        if (e.type === 1) this.startVoice(e.note, e.vel, e.tag, p); else if (e.type === 2) this.bass.start(e.note, e.vel, e.tag, this.sr, p.bassSound); }
       else ++k;
     }
   }
@@ -418,30 +539,116 @@ class Engine {
     this.arpOffAt = t + Math.floor(stepS * p.arpGate * this.sr);
     this.arpNext = t + Math.floor(stepS * this.sr);
   }
-  publishChord(key, p) {
-    if (p.mode !== 0) { this.ui.root = key; this.ui.type = -1; return; }
-    const pc = key % 12, type = this.effectiveType(p);
-    this.ui.root = pc;
-    if (type === CT_Auto) {
-      const c = this.chordNotes(key, p); let m3 = false, d5 = false;
-      for (const x of c) { const r = ((x % 12) - pc + 12) % 12; if (r === 3) m3 = true; if (r === 6) d5 = true; }
-      this.ui.minor = m3 ? 1 : 0; this.ui.dim = m3 && d5 ? 1 : 0;
+  patTick(t, p, bpm) {
+    if (t < this.patNext) return;
+    if (!this.held.length) { this.stopPerf(); return; }
+    const c = RHYTHMS[((p.rhythm % 11) + 11) % 11][this.patStep & 15];
+    this.ui.patStep = this.patStep & 15;
+    if (c === 'X' || c === 'x' || c === '.') {
+      if (this.patTag) { this.stopTag(this.patTag); this.patTag = 0; }
+      if (c !== '.') {
+        const H = this.held[this.held.length - 1], tag = this.tagCounter++, v = H.vel * (c === 'X' ? 1 : 0.78);
+        for (const nt of H.notes) this.startVoice(nt, v, tag, p);
+        this.patTag = tag;
+      }
     }
-    this.ui.type = type;
+    this.patStep = (this.patStep + 1) & 15;
+    this.patNext = t + Math.floor(60 / bpm * 0.25 * this.sr);
+  }
+  publishChord(key, p, mask) {
+    if (p.mode !== 0) { this.ui.root = key; this.ui.iv = 0; return; }
+    this.ui.root = key % 12; this.ui.iv = chordIntervals(key % 12, mask, p.key, p.scale, p.complexity);
+  }
+  // ---- looper ----
+  loopCmd(c, p) {
+    if (c === 1) {
+      if (this.loopState === L_Empty) this.loopState = L_Armed;
+      else if (this.loopState === L_Armed) this.loopState = L_Empty;
+      else if (this.loopState === L_Rec) { this.finishPassHeld(); this.loopState = L_Play; }
+      else if (this.loopState === L_Play) { this.loopLayer = ++this.loopLayers; this.loopState = L_Dub; }
+      else if (this.loopState === L_Dub) { this.finishPassHeld(); this.clearFresh(); this.loopState = L_Play; }
+      else if (this.loopState === L_Stop) { this.loopLayer = ++this.loopLayers; this.loopPos = 0; this.loopIdx = 0; this.loopState = L_Dub; }
+    } else if (c === 2) {
+      if (this.loopState === L_Play || this.loopState === L_Dub || this.loopState === L_Rec) { if (this.loopState !== L_Play) { this.finishPassHeld(); this.clearFresh(); } this.releasePlayback(p); this.loopState = L_Stop; }
+      else if (this.loopState === L_Stop) { this.loopPos = 0; this.loopIdx = 0; this.loopState = L_Play; }
+      else if (this.loopState === L_Armed) this.loopState = L_Empty;
+    } else if (c === 3) {
+      if (!this.loopEv.length) return;
+      let top = 0; for (const e of this.loopEv) top = Math.max(top, e.layer);
+      this.releasePlayback(p);
+      this.loopEv = this.loopEv.filter(e => e.layer !== top); this.loopLayers = Math.max(0, top - 1);
+      if (this.loopState === L_Dub) this.loopLayer = ++this.loopLayers;
+      this.loopIdx = 0; while (this.loopIdx < this.loopEv.length && this.loopEv[this.loopIdx].pos < this.loopPos) ++this.loopIdx;
+      if (!this.loopEv.length && this.loopState !== L_Dub) { this.loopState = L_Empty; this.loopLen = 0; this.loopPos = 0; }
+    } else if (c === 4) {
+      this.releasePlayback(p); this.loopEv = []; this.loopLayers = 0; this.loopState = L_Empty; this.loopLen = 0; this.loopPos = 0; this.loopIdx = 0;
+    }
+  }
+  startLoopRec(p) {
+    const bpm = p.tempo, bars = Math.max(1, Math.min(16, p.loopBars));
+    this.loopBpm = bpm; this.loopLen = Math.floor(bars * 4 * 60 / bpm * this.sr);
+    this.loopEv = []; this.loopLayers = 0; this.loopLayer = 0; this.loopPos = 0; this.loopIdx = 0; this.loopState = L_Rec;
+  }
+  recordEv(key, vel, on, mask, p) {
+    if (this.loopEv.length >= 4096 || !this.loopLen) return;
+    let pos = this.loopPos;
+    if (on && p.loopQuant) { const step = 60 / this.loopBpm * 0.25 * this.sr; pos = Math.floor(Math.floor(pos / step + 0.5) * step); if (pos >= this.loopLen) pos = 0; }
+    this.insertEv({ pos, key: key & 127, vel: Math.max(1, Math.floor(vel * 127)), on, fresh: true, mask, layer: this.loopLayer });
+  }
+  insertEv(e) {
+    const a = this.loopEv; let i = a.length; while (i > 0 && a[i - 1].pos > e.pos) --i;
+    a.splice(i, 0, e); if (i < this.loopIdx) ++this.loopIdx;
+  }
+  finishPassHeld() { for (let k = 0; k < 128; k++) if (this.userOn[k]) { this.insertEv({ pos: this.loopLen ? this.loopLen - 1 : 0, key: k, vel: 0, on: false, fresh: true, mask: 0, layer: this.loopLayer }); this.userOn[k] = 0; } }
+  clearFresh() { for (const e of this.loopEv) e.fresh = false; }
+  releasePlayback(p) { const pp = Object.assign({}, p, { hold: false, keySwitch: false }); for (let k = 0; k < 128; k++) if (this.playOn[k]) { this.playOn[k] = 0; this.noteOff(k, pp); } }
+  loopTick(p) {
+    const st = this.loopState;
+    if (st !== L_Rec && st !== L_Play && st !== L_Dub) return;
+    if (st !== L_Rec) {
+      const a = this.loopEv;
+      while (this.loopIdx < a.length && a[this.loopIdx].pos <= this.loopPos) {
+        const e = a[this.loopIdx++];
+        if (e.fresh) continue;
+        const pp = this._pp || (this._pp = {}); Object.assign(pp, p); pp.hold = false; pp.keySwitch = false;
+        if (e.on) { if (this.playOn[e.key]) this.noteOff(e.key, pp); this.playOn[e.key] = 1; this.noteOn(e.key, e.vel / 127, pp, e.mask); }
+        else if (this.playOn[e.key]) { this.playOn[e.key] = 0; this.noteOff(e.key, pp); }
+      }
+    }
+    if (++this.loopPos >= this.loopLen) {
+      this.loopPos = 0; this.loopIdx = 0;
+      if (st === L_Rec || st === L_Dub) {
+        const keep = st === L_Dub;
+        for (let k = 0; k < 128; k++) if (this.userOn[k]) {
+          const m = this.userOn[k] - 1;
+          this.insertEv({ pos: this.loopLen - 1, key: k, vel: 0, on: false, fresh: true, mask: 0, layer: this.loopLayer });
+          if (keep) this.insertEv({ pos: 0, key: k, vel: 100, on: true, fresh: true, mask: m, layer: this.loopLayer }); else this.userOn[k] = 0;
+        }
+        this.clearFresh();
+        if (keep) for (const e of this.loopEv) if (e.pos === 0 && e.layer === this.loopLayer && this.userOn[e.key]) e.fresh = true;
+        if (st === L_Rec) this.loopState = L_Play;
+      }
+      this.releasePlayback(p);
+    }
   }
   render(L, R, n, p) {
     const sr = this.sr, bpm = p.tempo;
     const dTarget = Math.min(2.5, 60 / bpm * DTIMES[Math.min(4, Math.max(0, p.delayTime))]) * sr;
     const volTarget = p.volume * p.volume * 1.4;
-    if (!this.smInit) { this.smVol = volTarget; this.smDel = dTarget; this.smCh = p.chorus; this.smDm = p.delayMix; this.smRm = p.reverbMix; this.smInit = true; }
-    const thr = 0.89, ro = this.revOut, dro = this.drumOut, voices = this.voices;
+    if (!this.smInit) { this.smVol = volTarget; this.smDel = dTarget; this.smCh = p.chorus; this.smDm = p.delayMix; this.smRm = p.reverbMix;
+      this.smCut = p.cutoff; this.smDrv = p.drive; this.smPh = p.phaser; this.smFl = p.flanger; this.smInit = true; }
+    const thr = 0.89, ro = this.revOut, dro = this.drumOut, drr = this.drumRevOut, voices = this.voices, apS = this.apS;
     for (let i = 0; i < n; i++) {
       const t = this.nowS + i;
       this.drums.clock(p, bpm);
+      this.loopTick(p);
       this.processEvents(t, p);
       if (this.arpOn) this.arpTick(t, p, bpm);
-      this.smVol += this.smK * (volTarget - this.smVol); this.smCh += this.smK * (p.chorus - this.smCh);
-      this.smDm += this.smK * (p.delayMix - this.smDm); this.smRm += this.smK * (p.reverbMix - this.smRm); this.smDel += this.smKd * (dTarget - this.smDel);
+      if (this.patOn) this.patTick(t, p, bpm);
+      const K = this.smK;
+      this.smVol += K * (volTarget - this.smVol); this.smCh += K * (p.chorus - this.smCh);
+      this.smDm += K * (p.delayMix - this.smDm); this.smRm += K * (p.reverbMix - this.smRm); this.smDel += this.smKd * (dTarget - this.smDel);
+      this.smCut += K * (p.cutoff - this.smCut); this.smDrv += K * (p.drive - this.smDrv); this.smPh += K * (p.phaser - this.smPh); this.smFl += K * (p.flanger - this.smFl);
       this.lfoPh += 5.6 / sr; if (this.lfoPh >= 1) this.lfoPh -= 1;
       this.lfo2 += (0.35 + 3.5 * p.movement) / sr; if (this.lfo2 >= 1) this.lfo2 -= 1;
       const vib = Math.sin(kTwoPi * this.lfoPh) * this.mod * 0.012;
@@ -449,6 +656,26 @@ class Engine {
       let s = 0;
       for (let k = 0; k < kMaxVoices; k++) { const v = voices[k]; if (v.active) s += v.render(p, sr, this.bend, vib, ls); }
       const b = this.bass.render(p, sr, this.bend);
+      if (this.smDrv > 0.002) { const g = 1 + 12 * this.smDrv; s = s * (1 - this.smDrv) + Math.tanh(s * g) / Math.pow(g, 0.7) * this.smDrv; }
+      if (this.smCut < 0.995) {
+        if ((i & 7) === 0) { const fc = 30 * Math.pow(600, this.smCut); this.cutF1.set(fc, 0.25, sr); this.cutF2.set(fc, 0.05, sr); }
+        s = this.cutF2.lp(this.cutF1.lp(s));
+      } else { this.cutF1.reset(); this.cutF2.reset(); }
+      if (this.smPh > 0.002) {
+        this.phLfo += 0.28 / sr; if (this.phLfo >= 1) this.phLfo -= 1;
+        const a = 0.5 + 0.45 * Math.sin(kTwoPi * this.phLfo);
+        let x = s + this.phFb * 0.6;
+        for (let k = 0; k < 6; k++) { const y = -a * x + apS[k]; apS[k] = x + a * y; x = y; }
+        this.phFb = x;
+        s = s * (1 - 0.5 * this.smPh) + x * this.smPh * 0.7;
+      }
+      this.flDl.push(s + this.flFb * 0.65 * this.smFl);
+      if (this.smFl > 0.002) {
+        this.flLfo += 0.12 / sr; if (this.flLfo >= 1) this.flLfo -= 1;
+        const d = (0.0012 + 0.0045 * (0.5 + 0.5 * Math.sin(kTwoPi * this.flLfo))) * sr;
+        const w = this.flDl.tap(d); this.flFb = w;
+        s = s * (1 - 0.4 * this.smFl) + w * 0.6 * this.smFl;
+      }
       this.chPh += 0.52 / sr; if (this.chPh >= 1) this.chPh -= 1;
       this.chL.push(s); this.chR.push(s);
       const dl = (0.0068 + 0.0019 * Math.sin(kTwoPi * this.chPh)) * sr;
@@ -462,6 +689,7 @@ class Engine {
       l += tapL * this.smDm * 1.2; r += tapR * this.smDm * 1.2;
       this.rev.process(l, r, p.reverbSize, ro);
       this.drums.render(p, dro);
+      if (p.drumVerb > 0.002) { this.drumRev.process(dro[0], dro[1], 0.55, drr); dro[0] += drr[0] * p.drumVerb * 1.6; dro[1] += drr[1] * p.drumVerb * 1.6; }
       l = (l * (1 - 0.4 * this.smRm) + ro[0] * this.smRm * 1.3 + b) * this.smVol + dro[0];
       r = (r * (1 - 0.4 * this.smRm) + ro[1] * this.smRm * 1.3 + b) * this.smVol + dro[1];
       const pk = Math.max(Math.abs(l), Math.abs(r));
@@ -473,6 +701,16 @@ class Engine {
     this.nowS += n;
   }
   activeNotes() { const a = []; for (const v of this.voices) if (v.active && !v.released) a.push(v.note); return a; }
+  // loop a MIDI: devuelve [{t (en negras), on, notes, vel}]
+  loopForExport(p) {
+    const pp = Object.assign({}, p, { voiceLead: false }), out = [];
+    for (const e of this.loopEv) {
+      const t = e.pos / this.sr * this.loopBpm / 60;
+      if (e.on) out.push({ t, on: true, key: e.key, vel: e.vel, notes: pp.mode === 0 ? rotate(this.baseNotes(e.key, pp, e.mask), pp.voicing) : [e.key + 12 * pp.octave] });
+      else out.push({ t, on: false, key: e.key });
+    }
+    return { ev: out, len: this.loopLen / this.sr * this.loopBpm / 60, bpm: this.loopBpm };
+  }
 }
 
 class LirioProcessor extends AudioWorkletProcessor {
@@ -483,13 +721,14 @@ class LirioProcessor extends AudioWorkletProcessor {
       const m = ev.data, p = this.p;
       switch (m.t) {
         case 'p': this.p = m.p; break;
-        case 'on': if (p) this.e.noteOn(m.k, m.v, p); break;
-        case 'off': if (p) this.e.noteOff(m.k, p); break;
+        case 'on': if (p) this.e.userNoteOn(m.k, m.v, p); break;
+        case 'off': if (p) this.e.userNoteOff(m.k, p); break;
         case 'sus': if (p) this.e.sustain(m.on, p); break;
         case 'bend': this.e.bend = Math.pow(2, m.s / 12); break;
         case 'mod': this.e.mod = m.v; break;
         case 'all': this.e.allOff(); break;
-        case 'clearKs': this.e.ksType = -1; this.e.ui.ks = -1; break;
+        case 'loop': if (p) this.e.loopCmd(m.c, p); break;
+        case 'export': if (p) this.port.postMessage(Object.assign({ t: 'loopmidi' }, this.e.loopForExport(p))); break;
         case 'rec': this.rec = m.on; break;
       }
     };
@@ -501,8 +740,11 @@ class LirioProcessor extends AudioWorkletProcessor {
     this.e.render(L, R, n, this.p);
     if (this.rec) this.port.postMessage({ t: 'pcm', l: L.slice(0), r: R.slice(0) });
     if (++this.blk % 8 === 0) {
-      const u = this.e.ui;
-      this.port.postMessage({ t: 'ui', root: u.root, type: u.type, minor: u.minor, dim: u.dim, act: u.act, ks: u.ks, step: this.e.drums.uiStep, notes: this.e.activeNotes(), lim: this.e.limGain });
+      const u = this.e.ui, e = this.e;
+      let name = '', tag = 0;
+      if (u.root >= 0 && u.iv > 0) { const c = chordSuffix(u.iv); name = c.s; tag = c.tag; }
+      this.port.postMessage({ t: 'ui', root: u.root, iv: u.iv, name, tag, act: u.act, ks: u.ks, step: e.drums.uiStep, pat: u.patStep, notes: e.activeNotes(), lim: e.limGain,
+        loop: e.loopState, loopPos: e.loopLen ? e.loopPos / e.loopLen : 0, loopN: e.loopEv.length });
     }
     return true;
   }

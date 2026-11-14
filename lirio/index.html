@@ -32,6 +32,18 @@ button,select,input{font-family:inherit;color:inherit}
 .pantalla-in{border:2.5px solid var(--pink);border-radius:18px;height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 #acorde{font-family:"Shrikhand",serif;font-size:44px;line-height:1;color:var(--lemon);text-shadow:2px 2px 0 var(--pink)}
 #subt{font-size:13px;color:var(--cream);margin-top:8px;text-align:center;padding:0 10px}
+#tag{position:absolute;left:18px;top:16px;font-size:12px;border-radius:10px;padding:2px 8px;background:var(--turq);color:var(--ink);display:none}
+#tag.wtf{background:var(--pink)}
+.lbar{height:22px;background:var(--ink);border-radius:999px;position:relative;overflow:hidden;margin:12px 0}
+.lbar i{position:absolute;left:3px;top:3px;bottom:3px;border-radius:999px;background:var(--lime);width:0}
+.lbar.rec i{background:var(--pink)}
+.lbar b{position:absolute;top:4px;bottom:4px;width:1.5px;background:#fff3d680}
+#loopT{font-size:12.5px;min-height:34px;margin-top:8px}
+.pills .pill.auto[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+#perf .pill,#complex .pill{font-size:12px;padding-left:2px;padding-right:2px;letter-spacing:-.02em}
+.ok .ac.long{font-size:11px;letter-spacing:-.03em} .ok.b .ac.long{font-size:9px}
+.ok .ac{max-width:100%;overflow:hidden;text-align:center}
+.p-sonido .knob{width:65px}
 #led{position:absolute;right:20px;top:18px;width:11px;height:11px;border-radius:50%;background:var(--lime);opacity:.25}
 .lado label{font-size:13px;color:var(--cream);display:block;margin-bottom:4px}
 
@@ -41,7 +53,8 @@ button,select,input{font-family:inherit;color:inherit}
 .panel>h2{position:absolute;top:-18px;left:16px;margin:0;font-family:"Shrikhand",serif;font-weight:400;font-size:20px;padding:2px 18px 4px;border:2.5px solid var(--ink);border-radius:17px;color:#fff;background:var(--c,var(--pink))}
 .panel>h2.osc{color:var(--ink)}
 .p-acorde{grid-column:span 4;--c:var(--pink)} .p-tono{grid-column:span 3;--c:var(--orange)} .p-int{grid-column:span 5;--c:var(--turq)}
-.p-sonido{grid-column:span 7;--c:var(--lemon)} .p-bajo{grid-column:span 2;--c:var(--lime)} .p-efx{grid-column:span 3;--c:var(--purple)}
+.p-sonido{grid-column:span 6;--c:var(--lemon)} .p-bajo{grid-column:span 3;--c:var(--lime)} .p-efx{grid-column:span 3;--c:var(--purple)}
+.p-loop{grid-column:span 5;--c:var(--pink)} .p-fx2{grid-column:span 4;--c:var(--turq)} .p-pre{grid-column:span 3;--c:var(--lime)}
 .p-ritmo{grid-column:span 12;--c:var(--orange)} .p-teclado{grid-column:span 12;--c:var(--sky)}
 .fila{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .nota{font-size:12.5px;opacity:.75;margin:10px 2px 0;line-height:1.35}
@@ -79,7 +92,7 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
 .tempo .bt button{padding:6px 0;text-align:center}
 
 /* grilla de ritmo */
-.ritmo{display:grid;grid-template-columns:170px 1fr 190px;gap:14px;align-items:start}
+.ritmo{display:grid;grid-template-columns:300px 1fr 190px;gap:14px;align-items:start}
 .grilla{display:grid;max-width:640px;grid-template-columns:86px repeat(16,1fr);gap:3px;align-items:center;user-select:none;touch-action:none}
 .grilla .ln{font-size:11.5px}
 .cel{aspect-ratio:1;border:1.6px solid var(--ink);border-radius:5px;background:#f3e2bd;cursor:pointer;min-width:0}
@@ -112,7 +125,7 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
 @media (max-width:980px){
   .top{grid-template-columns:1fr 1fr}
   .logo{grid-column:1/-1}
-  .p-acorde,.p-tono,.p-int,.p-sonido,.p-bajo,.p-efx{grid-column:span 6}
+  .p-acorde,.p-tono,.p-int,.p-sonido,.p-bajo,.p-efx,.p-loop,.p-fx2,.p-pre{grid-column:span 6}
   .ritmo{grid-template-columns:1fr}
 }
 @media (max-width:640px){
@@ -122,12 +135,13 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
   .top{grid-template-columns:1fr}
   .titulo{font-size:60px} #flor{width:80px;height:80px}
   .rack{gap:24px}
-  .p-acorde,.p-tono,.p-int,.p-sonido,.p-bajo,.p-efx{grid-column:span 12}
+  .p-acorde,.p-tono,.p-int,.p-sonido,.p-bajo,.p-efx,.p-loop,.p-fx2,.p-pre{grid-column:span 12}
   .grilla{grid-template-columns:64px repeat(16,1fr);gap:2px}
   .grilla .ln{font-size:9.5px}
   .knob{width:70px}
   .pill{font-size:12.5px;padding:8px 3px}
-  #perf{gap:4px}
+  #perf{gap:4px} #perf .pill{font-size:11px}
+  .p-sonido .knob{width:70px} .p-loop .btn{font-size:11.5px;padding:9px 2px}
 }
 </style>
 </head>
@@ -141,7 +155,7 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
       <div><h1 class="titulo">Lirio</h1><span class="sub">MÁQUINA DE ACORDES</span></div>
     </div>
     <div></div>
-    <div class="pantalla" aria-live="polite"><div class="pantalla-in"><div id="acorde">¡Tocá!</div><div id="subt"></div></div><div id="led"></div></div>
+    <div class="pantalla" aria-live="polite"><div class="pantalla-in"><span id="tag"></span><div id="acorde">¡Tocá!</div><div id="subt"></div></div><div id="led"></div></div>
     <div class="lado">
       <label for="preset">PRESET</label>
       <select id="preset" style="width:100%"></select>
@@ -152,22 +166,23 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
   <main class="rack">
     <section class="panel p-acorde"><h2>Acorde</h2>
       <div class="pills" id="tipos" style="grid-template-columns:repeat(3,1fr)"></div>
+      <div class="pills" style="grid-template-columns:1fr 3fr;margin-top:10px"><div class="pills"><button class="pill auto" id="autoBtn" title="Apaga todos los botones: cada tecla arma el acorde de la escala">AUTO<span class="k">R</span></button></div><div class="pills" id="complex" style="grid-template-columns:repeat(3,1fr)"></div></div>
       <div class="fila" style="margin-top:12px">
-        <button class="tog" data-t="add9" style="--tc:var(--lemon)">+9 <span class="pill-k">(R)</span></button>
         <button class="tog" data-t="hold" style="--tc:var(--pink)">MANTENER</button>
-        <button class="tog" data-t="keySwitch" style="--tc:var(--turq)" title="Las teclas MIDI 24 a 32 (Do1 a Sol#1) eligen el tipo de acorde">TECLAS DE CAMBIO</button>
+        <button class="tog" data-t="keySwitch" style="--tc:var(--turq)" title="Las teclas MIDI 24 a 32 (Do1 a Sol#1) son los 9 botones de acorde mientras las mantenés">TECLAS DE CAMBIO</button>
       </div>
+      <p class="nota">Los botones se combinan: MENOR + SUS2 da m(add2), MAYOR + 7 + 9 da 9. Mayor, Menor y Dim se reemplazan entre sí.</p>
     </section>
 
     <section class="panel p-tono"><h2>Tono</h2>
       <div class="knobs" id="kTono"></div>
       <div class="fila" style="margin-top:8px"><select id="key" aria-label="Tonalidad"></select><select id="scale" aria-label="Escala"><option value="0">Mayor</option><option value="1">Menor</option></select></div>
       <div class="fila" style="margin-top:10px"><button class="tog" data-t="followOct" style="--tc:var(--lime)" title="Encendido: el acorde suena en la octava de la tecla que tocás">OCTAVA DE LA TECLA</button></div>
-      <p class="nota">En AUTO, cada tecla arma el acorde de esta escala.</p>
+      <div class="fila" style="margin-top:8px"><button class="tog" data-t="voiceLead" style="--tc:var(--pink)" title="Cada acorde elige la inversión más cercana al anterior">VOICE LEADING</button></div>
     </section>
 
     <section class="panel p-int"><h2 class="osc">Interpretación</h2>
-      <div class="pills" id="perf" style="grid-template-columns:repeat(5,1fr)"></div>
+      <div class="pills" id="perf" style="grid-template-columns:repeat(6,1fr)"></div>
       <div class="fila" style="margin-top:10px;align-items:flex-start;justify-content:space-between">
         <div class="knobs" id="kInt"></div>
         <div class="tempo">
@@ -178,7 +193,8 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
       </div>
       <div class="fila" style="margin-top:8px">
         <label class="lbl" style="margin:0">RITMO DEL ARPEGIO <select id="arpRate"></select></label>
-        <label class="lbl" style="margin:0">PATRÓN <select id="arpPattern"></select></label>
+        <label class="lbl" style="margin:0">DIBUJO <select id="arpPattern"></select></label>
+        <label class="lbl" style="margin:0">PATRÓN RÍTMICO <select id="rhythm"></select></label>
       </div>
     </section>
 
@@ -190,13 +206,39 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
 
     <section class="panel p-bajo"><h2 class="osc">Bajo</h2>
       <div class="fila"><button class="tog" data-t="bassOn" style="--tc:var(--lime)">BAJO</button><select id="bassOct" aria-label="Octava del bajo"><option value="0">-1</option><option value="1">-2</option></select></div>
+      <select id="bassSound" aria-label="Sonido del bajo" style="margin-top:8px;width:100%"></select>
       <div class="knobs" id="kBajo" style="margin-top:8px"></div>
-      <p class="nota">Toca la raíz más abajo.</p>
+      <div class="pills" id="bassMode" style="grid-template-columns:1fr 1fr" title="SIGUE: el bajo toca la raíz del acorde. SOLO: el teclado toca solo el bajo"></div>
     </section>
 
     <section class="panel p-efx"><h2>Efectos</h2>
       <div class="knobs" id="kEfx"></div>
       <label class="lbl" style="display:block">TIEMPO DEL DELAY <select id="delayTime"></select></label>
+    </section>
+
+    <section class="panel p-loop"><h2>Looper</h2>
+      <div class="pills" style="grid-template-columns:1.4fr 1fr 1fr 1fr">
+        <button class="btn rec" id="lRec" title="Arranca con la primera nota que toques. Con el loop sonando, sobregraba encima">GRABAR</button>
+        <button class="btn" id="lPlay">PLAY</button><button class="btn" id="lUndo" title="Saca la última capa">DESHACER</button><button class="btn" id="lClear">BORRAR</button>
+      </div>
+      <div class="lbar" id="lBar"><i></i></div>
+      <div class="fila"><select id="loopBars" aria-label="Compases del looper"><option value="1">1 compás</option><option value="2">2 compases</option><option value="4">4 compases</option><option value="8">8 compases</option></select>
+        <button class="tog" data-t="loopQuant" style="--tc:var(--turq)" title="Acomoda lo que grabás a la semicorchea más cercana">CUANTIZAR</button>
+        <button class="btn" id="lMidi" title="Descarga el loop como archivo MIDI, con los acordes ya armados">GUARDAR .MID</button></div>
+      <div id="loopT">Elegí los compases y tocá GRABAR: arranca con la primera nota.</div>
+    </section>
+
+    <section class="panel p-fx2"><h2 class="osc">Más efectos</h2>
+      <div class="knobs" id="kFx2"></div>
+      <p class="nota">Saturación y filtro van antes del chorus, el delay y la reverb.</p>
+    </section>
+
+    <section class="panel p-pre"><h2 class="osc">Presets</h2>
+      <div class="pills"><button class="btn" id="pSave">GUARDAR PRESET</button><button class="btn" id="pDel">BORRAR PRESET MÍO</button></div>
+      <div class="fila" style="margin-top:10px;flex-direction:column;align-items:stretch">
+        <button class="tog" data-t="lockPerf" style="--tc:var(--orange)" title="Al cambiar de preset no se toca la interpretación">TRABAR INTERPRETACIÓN</button>
+        <button class="tog" data-t="lockFx" style="--tc:var(--purple)" title="Al cambiar de preset no se tocan los efectos">TRABAR EFECTOS</button>
+      </div>
     </section>
 
     <section class="panel p-ritmo"><h2>Ritmo</h2>
@@ -223,8 +265,8 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
       <div class="ayuda">
         <span><b>1</b>…<b>7</b> tocan los acordes de la escala</span>
         <span>El punto rosa marca las notas de la escala</span>
-        <span><b>Q W E</b> <b>A S D</b> <b>Z X C</b> eligen el tipo de acorde</span>
-        <span><b>R</b> +9</span>
+        <span><b>Q W E</b> <b>A S D</b> <b>Z X C</b> prenden y apagan los botones de acorde (se suman)</span>
+        <span><b>R</b> vuelve a AUTO</span>
         <span><b>Espacio</b> toca o para el ritmo</span>
         <span id="midiSt">Teclado MIDI: se conecta solo al tocar (Chrome o Edge).</span>
       </div>
@@ -240,10 +282,11 @@ const RAIN=[COL.pink,COL.orange,COL.lemon,COL.lime,COL.turq,COL.sky,COL.purple];
 const rainbow=i=>RAIN[((i%7)+7)%7];
 
 /* ---------- parámetros (los mismos del plugin) ---------- */
-const DEF={mode:0,chordType:0,add9:false,hold:false,keySwitch:true,followOct:true,key:9,scale:1,voicing:0,octave:0,perf:0,strumMs:40,slop:.5,
+const DEF={mode:0,chordMask:0,hold:false,keySwitch:true,followOct:true,voiceLead:false,complexity:1,key:9,scale:1,voicing:0,octave:0,perf:0,rhythm:0,strumMs:40,slop:.5,
   arpRate:3,arpPattern:0,arpOct:1,arpGate:.6,tempo:100,engine:0,bright:.6,tone2:.25,character:.5,movement:.3,attack:.005,decay:1.2,sustain:.6,release:.5,velSens:.7,
-  bassOn:false,bassLevel:.6,bassOct:0,bassTone:.4,chorus:.4,delayMix:.15,delayFb:.35,delayTime:1,reverbMix:.25,reverbSize:.7,volume:.78,
-  drumsOn:false,drumPattern:0,drumVol:.7,swing:.12,drumComp:.65,drumPhase:.35,drumTone:.55,lanes:[0,0,0,0,0,0],preset:0};
+  bassOn:false,bassLevel:.6,bassOct:0,bassTone:.4,bassMode:0,bassSound:0,chorus:.4,delayMix:.15,delayFb:.35,delayTime:1,reverbMix:.25,reverbSize:.7,volume:.78,
+  drive:0,phaser:0,flanger:0,cutoff:1,loopBars:2,loopQuant:true,lockPerf:false,lockFx:false,
+  drumsOn:false,drumPattern:0,drumVol:.7,swing:.12,drumComp:.65,drumPhase:.35,drumTone:.55,drumVerb:0,drumDrive:0,lanes:[0,0,0,0,0,0],preset:0};
 const KN={ // id: [min,max,centro (curva),formato,nombre,color,entero]
   voicing:[-4,4,0,'i','VOICING','pink',1], octave:[-2,2,0,'i','REGISTRO','orange',1], velSens:[0,1,0,'%','DINÁMICA','turq'],
   strumMs:[5,200,50,'ms','VELOCIDAD','pink'], slop:[0,1,0,'%','HUMANO','orange'], arpOct:[1,4,0,'i','OCTAVAS','lime',1], arpGate:[.1,1,0,'%','DURACIÓN','turq'],
@@ -251,7 +294,12 @@ const KN={ // id: [min,max,centro (curva),formato,nombre,color,entero]
   attack:[.001,5,.3,'s','ATAQUE','lime'], decay:[.05,10,1.5,'s','CAÍDA','sky'], sustain:[0,1,0,'%','SOSTÉN','purple'], release:[.01,10,1,'s','SUELTA','pink'],
   bassLevel:[0,1,0,'%','NIVEL','lime'], bassTone:[0,1,0,'%','TONO','orange'],
   chorus:[0,1,0,'%','CHORUS','turq'], delayMix:[0,1,0,'%','DELAY','pink'], delayFb:[0,.92,0,'%','REPETIR','orange'], reverbMix:[0,1,0,'%','REVERB','purple'], reverbSize:[0,1,0,'%','TAMAÑO','sky'], volume:[0,1,0,'%','VOLUMEN','lemon'],
-  drumVol:[0,1,0,'%','VOLUMEN','pink'], swing:[0,.6,0,'%','SWING','orange'], drumComp:[0,1,0,'%','COMPRESIÓN','lime'], drumPhase:[0,1,0,'%','FASE','turq'], drumTone:[0,1,0,'%','TONO','lemon']};
+  drive:[0,1,0,'%','SATURACIÓN','orange'], cutoff:[0,1,0,'%','FILTRO','lemon'], phaser:[0,1,0,'%','FASER','turq'], flanger:[0,1,0,'%','FLANGER','pink'],
+  drumVol:[0,1,0,'%','VOLUMEN','pink'], swing:[0,.6,0,'%','SWING','orange'], drumComp:[0,1,0,'%','COMPRESIÓN','lime'], drumVerb:[0,1,0,'%','REVERB','purple'], drumPhase:[0,1,0,'%','FASE','turq'], drumTone:[0,1,0,'%','TONO','lemon'], drumDrive:[0,1,0,'%','SATURAR','orange']};
+// lo que no dice un preset vuelve a estos valores (igual que el plugin)
+const BASE={engine:0,bright:.55,tone2:.25,character:.4,movement:.3,attack:.005,decay:1.2,sustain:.6,release:.5,perf:0,strumMs:40,slop:.5,arpRate:3,arpPattern:0,arpOct:1,arpGate:.6,rhythm:0,
+  bassOn:false,bassLevel:.6,bassTone:.4,bassMode:0,bassSound:0,chorus:.4,delayMix:.12,delayFb:.35,delayTime:1,reverbMix:.25,reverbSize:.7,drive:0,phaser:0,flanger:0,cutoff:1,volume:.78};
+const PERF_G=['perf','strumMs','slop','arpRate','arpPattern','arpOct','arpGate','rhythm'], FX_G=['chorus','delayMix','delayFb','delayTime','reverbMix','reverbSize','drive','phaser','flanger','cutoff'];
 const PRESETS=[
   ['Juno nublado',{engine:0,bright:.55,tone2:.2,character:.35,movement:.55,attack:.02,decay:1.2,sustain:.7,release:.8,chorus:.75,reverbMix:.35,reverbSize:.75,delayMix:.12,perf:0,bassOn:false,volume:.78}],
   ['Lengüeta soul',{engine:2,bright:.62,tone2:.45,character:.55,movement:.35,attack:.002,decay:2.5,sustain:.5,release:.25,chorus:.1,reverbMix:.2,delayMix:0,perf:0,bassOn:false,volume:.78}],
@@ -261,28 +309,73 @@ const PRESETS=[
   ['Arpegio 80s',{engine:0,bright:.45,tone2:.45,character:.6,movement:.3,attack:.002,decay:.35,sustain:.3,release:.2,chorus:.5,reverbMix:.25,delayMix:.3,delayFb:.45,perf:3,arpRate:3,arpPattern:2,arpOct:2,arpGate:.5,bassOn:true,volume:.78}],
   ['Arpa nocturna',{engine:2,bright:.55,tone2:.2,character:.3,movement:.4,attack:.002,decay:3,sustain:.2,release:1,chorus:.35,reverbMix:.55,reverbSize:.9,delayMix:.2,perf:4,strumMs:50,bassOn:false,volume:.68}],
   ['Bajo + acordes',{engine:0,bright:.5,tone2:.3,character:.4,movement:.4,attack:.01,decay:1,sustain:.6,release:.4,chorus:.55,reverbMix:.2,perf:0,bassOn:true,bassLevel:.7,bassTone:.5,volume:.78}],
-  ['Slop lo-fi',{engine:2,bright:.4,tone2:.6,character:.7,movement:.5,attack:.003,decay:2,sustain:.3,release:.3,chorus:.45,reverbMix:.3,delayMix:.15,perf:2,slop:.75,bassOn:false,volume:.78}]];
+  ['Slop lo-fi',{engine:2,bright:.4,tone2:.6,character:.7,movement:.5,attack:.003,decay:2,sustain:.3,release:.3,chorus:.45,reverbMix:.3,delayMix:.15,perf:2,slop:.75,bassOn:false,volume:.78}],
+  ['Bossa de living',{engine:2,bright:.5,tone2:.3,character:.45,movement:.3,attack:.002,decay:1.4,sustain:.35,release:.25,chorus:.3,reverbMix:.22,perf:5,rhythm:6,bassOn:true,bassSound:0,bassLevel:.55}],
+  ['Funk de pasillo',{engine:0,bright:.62,tone2:.5,character:.7,movement:.2,attack:.002,decay:.3,sustain:.25,release:.12,chorus:.2,reverbMix:.12,phaser:.35,perf:5,rhythm:7,bassOn:true,bassSound:2,bassTone:.55}],
+  ['Galope western',{engine:1,bright:.55,tone2:.3,character:.35,movement:.2,attack:.002,decay:.8,sustain:.2,release:.2,delayMix:.22,delayTime:2,reverbMix:.35,perf:5,rhythm:8,bassOn:true,bassSound:3}],
+  ['Reggae de patio',{engine:2,bright:.55,tone2:.5,character:.5,attack:.002,decay:.4,sustain:.1,release:.1,chorus:.15,delayMix:.28,delayFb:.5,delayTime:1,reverbMix:.2,perf:5,rhythm:4,bassOn:true,bassSound:3,bassLevel:.75}],
+  ['Pad de faser',{engine:0,bright:.4,tone2:.2,character:.2,movement:.6,attack:.9,decay:2,sustain:.85,release:2.5,chorus:.6,phaser:.7,reverbMix:.5,reverbSize:.9}],
+  ['Flanger espacial',{engine:0,bright:.6,tone2:.35,character:.3,movement:.5,attack:.3,decay:2,sustain:.7,release:2,chorus:.2,flanger:.7,delayMix:.25,reverbMix:.45,reverbSize:.85}],
+  ['Órgano roto',{engine:1,bright:.45,tone2:.15,character:.25,movement:.45,attack:.01,decay:1,sustain:.9,release:.2,chorus:.5,drive:.55,reverbMix:.2,volume:.7}],
+  ['Radio de cocina',{engine:2,bright:.5,tone2:.55,character:.6,movement:.4,attack:.002,decay:1.8,sustain:.3,release:.3,chorus:.4,drive:.35,cutoff:.55,reverbMix:.15,perf:2,slop:.6}],
+  ['Ácido de noche',{engine:0,bright:.35,tone2:.5,character:.5,movement:.3,attack:.002,decay:.5,sustain:.4,release:.2,delayMix:.3,delayFb:.5,reverbMix:.2,perf:5,rhythm:1,bassOn:true,bassSound:5,bassTone:.65,bassLevel:.7}],
+  ['Charleston',{engine:2,bright:.65,tone2:.4,character:.6,attack:.002,decay:1,sustain:.3,release:.2,chorus:.1,reverbMix:.25,cutoff:.7,perf:5,rhythm:2,bassOn:true,bassSound:4}],
+  ['Bajo solo FM',{engine:1,bassOn:true,bassMode:1,bassSound:4,bassLevel:.85,bassTone:.5,chorus:.1,reverbMix:.1}],
+  ['Bajo solo sierra',{engine:0,bassOn:true,bassMode:1,bassSound:1,bassLevel:.85,bassTone:.6,chorus:.2,reverbMix:.1}],
+  ['Arpa de flanger',{engine:1,bright:.7,tone2:.5,character:.35,attack:.002,decay:2.5,sustain:.1,release:1.2,flanger:.45,reverbMix:.45,reverbSize:.85,perf:4,strumMs:30}],
+  ['Arpegio tresillo',{engine:2,bright:.55,tone2:.3,character:.4,attack:.002,decay:.9,sustain:.2,release:.3,chorus:.3,delayMix:.25,reverbMix:.3,perf:3,arpRate:4,arpPattern:2,arpOct:2,arpGate:.45}],
+  ['Balada empañada',{engine:0,bright:.45,tone2:.2,character:.3,movement:.5,attack:.05,decay:2,sustain:.65,release:1.2,chorus:.6,reverbMix:.4,reverbSize:.8,cutoff:.75,perf:5,rhythm:10,bassOn:true}]];
 const P=b=>b.reduce((m,s)=>m|(1<<s),0);
-const PATS=[[P([0,7,8,10]),P([0,2,4,6,8,10,12,14]),P([4,12]),0,0,0],[P([0,8]),P([0,2,4,6,8,10,12,14]),P([4,12]),0,0,0],
-  [P([0,4,8,12]),0xffff,P([4,12]),0,0,0],[P([0,10]),P([0,4,8,12]),P([8]),P([12,13]),P([14]),P([15])],
-  [P([0,4,8,12]),P([2,6,10,14]),P([4,12]),0,0,0],[P([0,3,10]),P([0,2,4,6,8,10,12,14]),P([4,12,15]),0,0,0],
-  [P([0,8]),P([4,12]),0,P([6,14]),P([3,10,11]),P([0,2,8])],[0,0,0,0,0,0]];
-const PAT_N=['Groove psicodélico','Latido','Motorik','Lento con toms','Electropop','Breakbeat','Tribal de toms','Vacío'];
+const E8=P([0,2,4,6,8,10,12,14]);
+const PATS=[[P([0,7,8,10]),E8,P([4,12]),0,0,0],[P([0,8]),E8,P([4,12]),0,0,0],[P([0,4,8,12]),0xffff,P([4,12]),0,0,0],[P([0,10]),P([0,4,8,12]),P([8]),P([12,13]),P([14]),P([15])],
+  [P([0,4,8,12]),P([2,6,10,14]),P([4,12]),0,0,0],[P([0,3,10]),E8,P([4,12,15]),0,0,0],[P([0,8]),P([4,12]),0,P([6,14]),P([3,10,11]),P([0,2,8])],
+  [P([0,3,8,11]),E8,P([0,3,6,10,13]),0,0,0],[P([8]),P([2,6,10,14]),P([8]),0,0,0],[P([0,7,10]),E8,P([4,12]),0,0,0],[P([0,4,8,12]),P([2,6,10,14]),P([4,12]),0,0,0],
+  [P([0,3,10]),0xffff,P([4,9,12]),0,0,0],[P([0,8,10]),E8,P([4,12]),0,0,0],[P([0,8]),P([0,3,4,7,8,11,12,15]),P([4,12]),0,0,0],[P([0,4,8,12]),E8,P([3,6,11,14]),0,0,0],
+  [P([0,8]),P([0,2,3,4,6,7,8,10,11,12,14,15]),P([4,12]),0,0,P([6,14])],[P([0,3,4,7,8,11,12,15]),0xffff,P([2,6,9,13]),0,0,0],[P([0,10,11]),P([0,4,8,12]),P([4,12]),0,0,P([14])],
+  [P([0,3,6,8,11,14]),0,P([4,12]),0,0,0],[0,0,0,0,0,0]];
+const PAT_N=['Groove psicodélico','Latido','Motorik','Lento con toms','Electropop','Breakbeat','Tribal de toms','Bossa','One drop','Hip hop lento','Disco','Funk','Rock','Shuffle','Dembow','Cumbia','Samba','Trip hop','Milonga','Vacío'];
+const RHY_N=['Negras','Corcheas','Charleston','Tresillo','Contratiempo','Empuje pop','Bossa','Funk','Galope','Síncopa','Balada'];
 const LANES=['BOMBO','HI-HAT','REDOBLANTE','TOM 1','TOM 2','TOM 3'];
 const KEYS_ES=['Do','Do#','Re','Re#','Mi','Fa','Fa#','Sol','Sol#','La','La#','Si'];
 const LET=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-const PERF_N=['Acorde','Strum','Slop','Arpegio','Arpa'];
-const SUF=(t,m,d)=>['', '', 'm','sus2','sus4','7','maj7','m7','dim'][t]??'';
+const PERF_N=['Acorde','Strum','Slop','Arpegio','Arpa','Patrón'];
+// armado y nombre de acordes (igual que el motor)
+const SCL0=[[0,2,4,5,7,9,11],[0,2,3,5,7,8,10]];
+const popc=m=>{let c=0; while(m){m&=m-1; c++} return c};
+function chordIv(pc,mask,key,scale,cx){
+  let third=4,fifth=7,dSev=10; const hasT=(mask&7)!==0;
+  if(mask&1){third=4;fifth=7} else if(mask&2){third=3;fifth=7} else if(mask&4){third=3;fifth=6}
+  else{const sc=SCL0[scale?1:0], rel=((pc-key)%12+12)%12, d=sc.indexOf(rel); if(d>=0){third=(sc[(d+2)%7]-rel+12)%12; fifth=(sc[(d+4)%7]-rel+12)%12; dSev=(sc[(d+6)%7]-rel+12)%12; if(dSev!==10&&dSev!==11)dSev=10}}
+  const s2=!!(mask&8),s4=!!(mask&16); let six=!!(mask&32),sev=!!(mask&64),maj7=!!(mask&128),nine=!!(mask&256); let m=1;
+  if((s2||s4)&&!hasT){if(s2)m|=4; if(s4)m|=32} else {m|=1<<third; if(s2)m|=4; if(s4)m|=32}
+  m|=1<<fifth;
+  if(cx===0){if(maj7){sev=six=nine=false} else if(sev){six=nine=false} else if(six)nine=false}
+  if(cx===1&&maj7&&sev)sev=false;
+  if(six)m|=1<<((cx===1&&(sev||maj7))?21:9); if(sev)m|=1<<(hasT?10:dSev); if(maj7)m|=1<<11; if(nine)m|=1<<14;
+  const lim=cx===0?4:cx===1?6:99; if(popc(m)>lim&&(m&128))m&=~128;
+  return m;
+}
+function chordName(m){
+  const h=i=>((m>>i)&1)!==0, t4=h(4),t3=h(3),b5=h(6)&&!h(7),sev=h(10),maj7=h(11),six=h(9),thir=h(21),nine=h(14),s2=h(2),s4=h(5); let s;
+  if(t3&&b5&&!t4){s=sev?'m7b5':six?'dim7':'dim'; if(maj7)s+='(maj7)'; if(nine)s+='(add9)'}
+  else{const q=t3&&!t4?'m':''; if(sev||maj7){const ext=thir?'13':nine?'9':'7'; s=maj7&&sev?q+ext+'(maj7)':maj7?(q===''?'maj'+ext:'m(maj'+ext+')'):q+ext; if(six&&!thir)s+='(add6)'}
+    else if(six||thir)s=q+(nine?'6/9':'6'); else{s=q; if(nine)s+='add9'}}
+  if(!t3&&!t4)s+=s4?(s2?'sus2sus4':'sus4'):(s2?'sus2':'5'); else{if(s2)s+='(add2)'; if(s4)s+='(add4)'}
+  return s;
+}
+let userP={}; try{userP=JSON.parse(localStorage.getItem('lirio-web-presets')||'{}')||{}}catch(e){}
+const saveUserP=()=>{try{localStorage.setItem('lirio-web-presets',JSON.stringify(userP))}catch(e){}};
 
 let st;
 try{st=Object.assign({},DEF,JSON.parse(localStorage.getItem('lirio-web')||'null')||{})}catch(e){st=Object.assign({},DEF)}
 if(!Array.isArray(st.lanes)||st.lanes.length!==6)st.lanes=PATS[st.drumPattern||0].slice();
+delete st.chordType; delete st.add9; if(![1,2,4,8].includes(+st.loopBars))st.loopBars=2; if(typeof st.preset!=='number'&&!(typeof st.preset==='string'&&userP[st.preset.slice(2)]))st.preset=0;
 if(!(()=>{try{return localStorage.getItem('lirio-web')}catch(e){return null}})()){Object.assign(st,PRESETS[0][1]); st.lanes=PATS[0].slice()} // primera vez: preset Juno nublado
 const save=()=>{try{localStorage.setItem('lirio-web',JSON.stringify(st))}catch(e){}};
 
 /* ---------- audio ---------- */
 let ctx=null,node=null,starting=null,recBufs=null,recLen=0,recT0=0;
-let ui={root:-1,type:0,minor:0,dim:0,act:0,ks:-1,step:-1,notes:[]};
+let ui={root:-1,iv:0,name:'',tag:0,act:0,ks:0,step:-1,notes:[],loop:0,loopPos:0,loopN:0};
 async function audio(){
   if(node){if(ctx.state!=='running')try{await ctx.resume()}catch(e){} return true}
   if(starting)return starting;
@@ -292,7 +385,7 @@ async function audio(){
       await ctx.audioWorklet.addModule('lirio-engine.js');
       node=new AudioWorkletNode(ctx,'lirio',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2]});
       node.connect(ctx.destination);
-      node.port.onmessage=e=>{const m=e.data; if(m.t==='ui'){ui=m} else if(m.t==='pcm'&&recBufs){recBufs[0].push(m.l); recBufs[1].push(m.r); recLen+=m.l.length}};
+      node.port.onmessage=e=>{const m=e.data; if(m.t==='ui'){ui=m} else if(m.t==='loopmidi'){saveMidi(m)} else if(m.t==='pcm'&&recBufs){recBufs[0].push(m.l); recBufs[1].push(m.r); recLen+=m.l.length}};
       node.port.postMessage({t:'p',p:st}); await ctx.resume(); midi(); return true;
     }catch(err){$('acorde').textContent='Sin audio'; $('subt').textContent='Este navegador no puede usar Lirio. Probá con Chrome, Edge, Firefox o Safari actualizados.'; node=null; return false}
   })();
@@ -313,17 +406,34 @@ function pills(id,names,key,opts={}){
   return ()=>[...box.children].forEach((b,i)=>b.setAttribute('aria-pressed',i===(opts.shown?opts.shown():st[key])));
 }
 const updModo=pills('modo',['ACORDES','NOTAS'],'mode');
-const updTipos=pills('tipos',['AUTO','MAYOR','MENOR','SUS2','SUS4','7','MAJ7','m7','DIM'],'chordType',{rainbow:1,keys:['Q','W','E','A','S','D','Z','X','C'],claro:i=>[2,3].includes(i%7),
-  after:()=>{node&&node.port.postMessage({t:'clearKs'}); ui.ks=-1},shown:()=>ui.ks>=0?ui.ks:st.chordType});
-const updPerf=pills('perf',['ACORDE','STRUM','SLOP','ARPEGIO','ARPA'],'perf',{rainbow:1,claro:i=>[2,3].includes(i)});
+// botones de acorde: se combinan; MAYOR/MENOR/DIM se reemplazan entre sí
+function toggleChord(i){let m=st.chordMask; const bit=1<<i; if(m&bit)m&=~bit; else{if(i<3)m&=~7; m|=bit} st.chordMask=m; changed('chordMask')}
+const tiposBox=$('tipos');
+['MAYOR','MENOR','DIM','SUS2','SUS4','6','7','MAJ7','9'].forEach((n,i)=>{const b=document.createElement('button'); b.className='pill'+([2,3].includes(i%7)?' claro':''); b.innerHTML=n+`<span class="k">${'QWEASDZXC'[i]}</span>`; b.style.setProperty('--on',rainbow(i)); b.onclick=()=>toggleChord(i); tiposBox.appendChild(b)});
+function updTipos(){const ks=ui.ks||0; let m=st.chordMask; if(ks&7)m&=~7; m|=ks; [...tiposBox.children].forEach((b,i)=>b.setAttribute('aria-pressed',!!((m>>i)&1))); $('autoBtn').setAttribute('aria-pressed',m===0)}
+$('autoBtn').onclick=()=>{st.chordMask=0; changed('chordMask')};
+const updCx=pills('complex',['SIMPLE','AVANZADO','LIBRE'],'complexity',{rainbow:1,claro:i=>i===2});
+const updPerf=pills('perf',['ACORDE','STRUM','SLOP','ARPEGIO','ARPA','PATRÓN'],'perf',{rainbow:1,claro:i=>[2,3].includes(i)});
+const updBassMode=pills('bassMode',['SIGUE','SOLO'],'bassMode',{rainbow:1});
 const updMotor=pills('motor',['ANALÓGICO','FM','LENGÜETA'],'engine',{rainbow:1,claro:i=>i===2});
 document.querySelectorAll('.tog').forEach(b=>b.onclick=()=>{const k=b.dataset.t; st[k]=!st[k]; changed(k)});
-function sel(id,opts,key,num=true){const s=$(id); if(opts)s.innerHTML=opts.map((o,i)=>`<option value="${i}">${o}</option>`).join(''); s.onchange=()=>{st[key]=num?+s.value:s.value; if(key==='drumPattern'){st.lanes=PATS[st.drumPattern].slice()} changed(key)}; return ()=>{s.value=st[key]}}
+function sel(id,opts,key,num=true){const s=$(id); if(opts)s.innerHTML=opts.map((o,i)=>`<option value="${i}">${o}</option>`).join(''); s.onchange=()=>{st[key]=num?+s.value:s.value; if(key==='drumPattern'){st.lanes=PATS[st.drumPattern].slice()} changed(key); s.blur()}; return ()=>{s.value=st[key]}}
 const sels=[sel('key',KEYS_ES,'key'),sel('scale',null,'scale'),sel('arpRate',['1/4','1/8','1/8T','1/16','1/16T','1/32'],'arpRate'),sel('arpPattern',['Arriba','Abajo','Ida y vuelta','Azar'],'arpPattern'),
-  sel('delayTime',['1/4','1/8.','1/8','1/16','1/4T'],'delayTime'),sel('bassOct',null,'bassOct'),sel('drumPattern',PAT_N,'drumPattern')];
-$('preset').innerHTML=PRESETS.map((p,i)=>`<option value="${i}">${p[0]}</option>`).join('');
-$('preset').onchange=()=>{const i=+$('preset').value; Object.assign(st,DEF_SOUND(),PRESETS[i][1]); st.preset=i; changed('preset')};
-function DEF_SOUND(){const o={}; ['engine','bright','tone2','character','movement','attack','decay','sustain','release','chorus','reverbMix','reverbSize','delayMix','delayFb','perf','strumMs','slop','arpRate','arpPattern','arpOct','arpGate','bassOn','bassLevel','bassTone','volume'].forEach(k=>o[k]=DEF[k]); return o}
+  sel('delayTime',['1/4','1/8.','1/8','1/16','1/4T'],'delayTime'),sel('bassOct',null,'bassOct'),sel('drumPattern',PAT_N,'drumPattern'),
+  sel('rhythm',RHY_N,'rhythm'),sel('bassSound',['Redondo','Sierra','Cuadrado','Sub','FM','Ácido'],'bassSound'),sel('loopBars',null,'loopBars')];
+function presetList(){
+  let h=PRESETS.map((p,i)=>`<option value="${i}">${p[0]}</option>`).join('');
+  const names=Object.keys(userP).sort((a,b)=>a.localeCompare(b));
+  if(names.length)h+='<optgroup label="Tus presets">'+names.map(n=>`<option value="u:${n.replace(/"/g,'&quot;')}">${n.replace(/</g,'&lt;')}</option>`).join('')+'</optgroup>';
+  $('preset').innerHTML=h;
+}
+presetList();
+function applyPreset(vals){const may=k=>!(st.lockPerf&&PERF_G.includes(k))&&!(st.lockFx&&FX_G.includes(k)); for(const [k,v] of Object.entries(Object.assign({},BASE,vals)))if(may(k)&&k in DEF)st[k]=Array.isArray(v)?v.slice():v}
+$('preset').onchange=()=>{const v=$('preset').value; if(v.startsWith('u:')){const u=userP[v.slice(2)]; if(!u)return; applyPreset(u); st.preset=v} else {applyPreset(PRESETS[+v][1]); st.preset=+v} changed('preset'); $('preset').blur()};
+const NOT_IN_PRESET=['chordMask','mode','hold','keySwitch','drumsOn','tempo','preset','kbOct','lockPerf','lockFx','loopBars','loopQuant'];
+$('pSave').onclick=()=>{const cur=typeof st.preset==='string'?st.preset.slice(2):''; const n=(prompt('Ponele un nombre a tu sonido:',cur)||'').trim(); if(!n)return;
+  const o={}; for(const k of Object.keys(DEF))if(!NOT_IN_PRESET.includes(k))o[k]=Array.isArray(st[k])?st[k].slice():st[k]; userP[n]=o; saveUserP(); presetList(); st.preset='u:'+n; changed('preset')};
+$('pDel').onclick=()=>{if(typeof st.preset!=='string')return alert('Elegí primero uno de tus presets en la lista.'); const n=st.preset.slice(2); if(!confirm('¿Borrar el preset "'+n+'"?'))return; delete userP[n]; saveUserP(); presetList(); st.preset=0; changed('preset')};
 
 /* ---------- knobs con forma de flor ---------- */
 const skew=c=>c;
@@ -363,7 +473,8 @@ function drawKnob(id){const k=knobEls[id]; const v=st[id], key=v+'|'+k.name; if(
 ['bright','tone2','character','movement','attack','decay','sustain','release'].forEach(i=>knob('kSon',i));
 ['bassLevel','bassTone'].forEach(i=>knob('kBajo',i));
 ['chorus','delayMix','delayFb','reverbMix','reverbSize','volume'].forEach(i=>knob('kEfx',i));
-['drumVol','swing','drumComp','drumPhase','drumTone'].forEach(i=>knob('kRit',i));
+['drive','cutoff','phaser','flanger'].forEach(i=>knob('kFx2',i));
+['drumVol','swing','drumComp','drumVerb','drumPhase','drumTone','drumDrive'].forEach(i=>knob('kRit',i));
 const ENG_LBL=[['RESONANCIA','ENVOLVENTE','MOVIMIENTO'],['RELACIÓN','ÍNDICE','TRÉMOLO'],['MECÁNICA','MORDIDA','TRÉMOLO']];
 function engineLabels(){ENG_LBL[st.engine].forEach((t,i)=>{const id=['tone2','character','movement'][i]; const k=knobEls[id]; if(k.name!==t){k.name=t; k.el.querySelector('.n').textContent=t; k.last=null}})}
 
@@ -392,6 +503,38 @@ const stopPaint=()=>{if(paint!==null){paint=null; changed('lanes')}}; g.addEvent
 function setCel(l,s){const onb=!!((st.lanes[l]>>s)&1); if(onb!==paint){st.lanes[l]^=(1<<s); st.lanes=st.lanes.slice(); sendP(); drawGrid()}}
 function drawGrid(){for(let l=0;l<6;l++)for(let s=0;s<16;s++){const c=cels[l][s]; c.classList.toggle('on',!!((st.lanes[l]>>s)&1)); c.classList.toggle('cur',s===ui.step)}}
 $('drumPlay').onclick=async()=>{await audio(); st.drumsOn=!st.drumsOn; changed('drumsOn')};
+
+/* ---------- looper ---------- */
+const loopCmd=async c=>{if(await audio())node.port.postMessage({t:'loop',c})};
+$('lRec').onclick=()=>loopCmd(1); $('lPlay').onclick=()=>loopCmd(2); $('lUndo').onclick=()=>loopCmd(3); $('lClear').onclick=()=>loopCmd(4);
+$('lMidi').onclick=()=>{if(!node||!ui.loopN){$('loopT').textContent='Todavía no hay nada grabado.'; return} node.port.postMessage({t:'export'})};
+const LOOP_T=['Elegí los compases y tocá GRABAR: arranca con la primera nota.','Listo: empezá a tocar y se graba.','Grabando la primera vuelta…','Sonando. SOBREGRABAR suma otra capa; DESHACER la saca.','Sobregrabando: lo que toques se suma.','Loop guardado. PLAY lo vuelve a tocar.'];
+let lastLoop=-1;
+function drawLoop(){
+  const s=ui.loop||0;
+  if(s!==lastLoop){lastLoop=s;
+    $('lRec').textContent=['GRABAR','ESPERANDO…','GRABANDO','SOBREGRABAR','SOBREGRABANDO','SOBREGRABAR'][s]; $('lRec').classList.toggle('on',s===1||s===2||s===4);
+    $('lPlay').textContent=(s===2||s===3||s===4)?'PARAR':'PLAY'; $('lPlay').classList.toggle('on',s===2||s===3||s===4);
+    $('loopT').textContent=LOOP_T[s];
+    const bar=$('lBar'), n=st.loopBars; bar.querySelectorAll('b').forEach(x=>x.remove()); for(let k=1;k<n;k++){const b=document.createElement('b'); b.style.left=(100*k/n)+'%'; bar.appendChild(b)}
+    bar.classList.toggle('rec',s===2||s===4);
+  }
+  $('lBar').firstElementChild.style.width=(s===2||s===3||s===4)?`calc(${(ui.loopPos*100).toFixed(2)}% - 6px)`:'0';
+}
+function saveMidi(m){
+  const tpq=960, ev=[]; const T=q=>Math.round(q*tpq);
+  for(let rep=0;rep<2;rep++){const base=m.len*rep, snd={};
+    for(const e of m.ev){const t=base+e.t; if(e.on){(snd[e.key]||[]).forEach(n=>ev.push([T(t),0x80,n,0])); e.notes.forEach(n=>ev.push([T(t),0x90,n,e.vel])); snd[e.key]=e.notes} else {(snd[e.key]||[]).forEach(n=>ev.push([T(t),0x80,n,0])); snd[e.key]=[]}}
+    Object.values(snd).forEach(ns=>ns.forEach(n=>ev.push([T(base+m.len)-1,0x80,n,0])))}
+  ev.sort((a,b)=>a[0]-b[0]||(a[1]-b[1]));
+  const bytes=[]; const vlq=v=>{const b=[v&127]; while(v>>=7)b.unshift((v&127)|128); bytes.push(...b)};
+  const us=Math.round(60000000/m.bpm); vlq(0); bytes.push(0xFF,0x51,3,(us>>16)&255,(us>>8)&255,us&255);
+  let last=0; for(const [t,s,n,v] of ev){vlq(t-last); last=t; bytes.push(s,n,v)} vlq(0); bytes.push(0xFF,0x2F,0);
+  const hdr=[0x4D,0x54,0x68,0x64,0,0,0,6,0,0,0,1,(tpq>>8)&255,tpq&255,0x4D,0x54,0x72,0x6B,(bytes.length>>>24)&255,(bytes.length>>16)&255,(bytes.length>>8)&255,bytes.length&255];
+  const d=new Date(),p2=x=>String(x).padStart(2,'0'),name=`Lirio-loop-${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}_${p2(d.getHours())}-${p2(d.getMinutes())}.mid`;
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([new Uint8Array(hdr.concat(bytes))],{type:'audio/midi'})); a.download=name; document.body.appendChild(a); a.click(); a.remove();
+  $('loopT').textContent='Guardado: '+name;
+}
 
 /* ---------- grabar demo (WAV estéreo 24 bits) ---------- */
 $('recBtn').onclick=async()=>{
@@ -458,22 +601,19 @@ const okEls={};
 // nombre del acorde que va a sonar en cada tecla (misma lógica que el motor)
 function acordeDe(pc){
   if(st.mode!==0)return '';
-  const t=ui.ks>=0?ui.ks:st.chordType;
-  if(t>0)return LET[pc]+SUF(t);
-  const sc=SCL[st.scale], rel=(pc-st.key+12)%12, d=sc.indexOf(rel);
-  if(d<0)return LET[pc];
-  const t3=(sc[(d+2)%7]-rel+12)%12, t5=(sc[(d+4)%7]-rel+12)%12;
-  return LET[pc]+(t3===3?(t5===6?'dim':'m'):'');
+  if(st.bassOn&&st.bassMode===1)return '';
+  const ks=ui.ks||0; let m=st.chordMask; if(ks&7)m&=~7; m|=ks;
+  return LET[pc]+chordName(chordIv(pc,m,st.key,st.scale,st.complexity));
 }
 let octSig='';
 function drawOct(){
-  const sig=[st.kbOct,st.key,st.scale,st.chordType,st.mode,ui.ks,st.add9].join();
+  const sig=[st.kbOct,st.key,st.scale,st.chordMask,st.mode,ui.ks,st.complexity,st.bassOn,st.bassMode].join();
   if(sig===octSig)return; octSig=sig;
   $('octLbl').textContent='Octava '+st.kbOct;
   const sc=SCL[st.scale];
   for(const [pc,el] of Object.entries(okEls)){const p=+pc;
     el.querySelector('.nn').textContent=NOMBRE[p];
-    el.querySelector('.ac').textContent=acordeDe(p)+(st.mode===0&&st.add9&&acordeDe(p)?'add9':'');
+    const ac=el.querySelector('.ac'), tx=acordeDe(p); ac.textContent=tx; ac.classList.toggle('long',tx.length>5);
     el.classList.toggle('esc',sc.includes((p-st.key+12)%12))}
 }
 
@@ -482,8 +622,8 @@ const degDown=new Map();
 addEventListener('keydown',e=>{
   if(e.target.matches('input,select,textarea')||e.metaKey||e.ctrlKey||e.altKey)return;
   const k=e.key.toLowerCase(), ti='qweasdzxc'.indexOf(k);
-  if(ti>=0&&k.length===1){e.preventDefault(); st.chordType=ti; node&&node.port.postMessage({t:'clearKs'}); ui.ks=-1; changed('chordType'); return}
-  if(k==='r'){e.preventDefault(); st.add9=!st.add9; changed('add9'); return}
+  if(ti>=0&&k.length===1){e.preventDefault(); if(!e.repeat)toggleChord(ti); return}
+  if(k==='r'){e.preventDefault(); st.chordMask=0; changed('chordMask'); return}
   if(e.code==='Space'){e.preventDefault(); if(!e.repeat)$('drumPlay').click(); return}
   if(/^[1-7]$/.test(e.key)){e.preventDefault(); if(e.repeat||degDown.has(e.key))return; const d=+e.key-1;
     const note=60+((st.key+SCL[st.scale][d])%12); degDown.set(e.key,note); held.add(note); on(note,0.85)}
@@ -511,7 +651,7 @@ function msg(e){const [s,a,b]=e.data, c=s&0xf0;
 
 /* ---------- pantalla y refresco ---------- */
 function refresh(){
-  updModo(); updTipos(); updPerf(); updMotor(); sels.forEach(f=>f()); $('preset').value=st.preset;
+  updModo(); updTipos(); updCx(); updPerf(); updMotor(); updBassMode(); sels.forEach(f=>f()); $('preset').value=String(st.preset); lastLoop=-1; drawLoop();
   document.querySelectorAll('.tog').forEach(b=>b.setAttribute('aria-pressed',!!st[b.dataset.t]));
   engineLabels(); Object.keys(knobEls).forEach(drawKnob);
   if($('tVal'))$('tVal').textContent=Math.abs(st.tempo-Math.round(st.tempo))<0.05?Math.round(st.tempo):st.tempo.toFixed(1);
@@ -520,10 +660,11 @@ function refresh(){
 }
 let lastAct=-1, led=0;
 function screen(){
-  const r=ui.root, t=ui.type;
-  let name; if(r<0)name='¡Tocá!'; else if(t<0)name=LET[r%12]+(Math.floor(r/12)-1); else name=LET[r]+(t===0?(ui.dim?'dim':ui.minor?'m':''):SUF(t))+(st.add9?'add9':'');
+  const r=ui.root, iv=ui.iv;
+  let name; if(r<0)name='¡Tocá!'; else if(!(iv>0))name=LET[r%12]+(Math.floor(r/12)-1); else name=LET[r%12]+ui.name;
   $('acorde').textContent=name;
-  $('subt').textContent=(r>=0&&t>=0?KEYS_ES[r]+'  ·  ':'')+PERF_N[st.perf].toUpperCase()+'  ·  '+Math.round(st.tempo)+' BPM';
+  const tg=$('tag'); tg.style.display=ui.tag&&r>=0?'block':'none'; tg.textContent=ui.tag===2?'WTF?':'JAZZ?'; tg.classList.toggle('wtf',ui.tag===2);
+  $('subt').textContent=(r>=0&&iv>0?KEYS_ES[r%12]+'  ·  ':'')+(iv===-1?'BAJO SOLO':PERF_N[st.perf].toUpperCase())+'  ·  '+Math.round(st.tempo)+' BPM';
 }
 let lastStep=-2, lastKs=-2, lastNotes='';
 function frame(){
@@ -531,7 +672,7 @@ function frame(){
   if(ui.step!==lastStep){lastStep=ui.step; drawGrid()}
   if(ui.ks!==lastKs){lastKs=ui.ks; updTipos(); drawOct()}
   const ns=(ui.notes||[]).join(',')+'|'+[...held].join(','); if(ns!==lastNotes){lastNotes=ns; drawKb()}
-  screen(); drawFlor(performance.now()/1000);
+  screen(); drawLoop(); drawFlor(performance.now()/1000);
   requestAnimationFrame(frame);
 }
 
