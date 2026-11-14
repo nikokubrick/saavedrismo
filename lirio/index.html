@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#d2a034">
 <title>Lirio · máquina de acordes en el navegador</title>
 <meta name="description" content="Lirio en el navegador: cada tecla toca un acorde completo. Strum, arpegio, arpa, tres motores de sonido, bajo, efectos y caja de ritmos. Gratis, de Saavedrismo.">
 <link rel="icon" href="../sol.svg" type="image/svg+xml">
@@ -43,7 +44,7 @@ button,select,input{font-family:inherit;color:inherit}
 #perf .pill,#complex .pill{font-size:12px;padding-left:2px;padding-right:2px;letter-spacing:-.02em}
 .ok .ac.long{font-size:11px;letter-spacing:-.03em} .ok.b .ac.long{font-size:9px}
 .ok .ac{max-width:100%;overflow:hidden;text-align:center}
-.p-sonido .knob{width:65px}
+.p-sonido .knob{width:60px} .p-sonido .knob .n{font-size:9.5px;letter-spacing:-.02em}
 #led{position:absolute;right:20px;top:18px;width:11px;height:11px;border-radius:50%;background:var(--lime);opacity:.25}
 .lado label{font-size:13px;color:var(--cream);display:block;margin-bottom:4px}
 
@@ -143,6 +144,61 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
   #perf{gap:4px} #perf .pill{font-size:11px}
   .p-sonido .knob{width:70px} .p-loop .btn{font-size:11.5px;padding:9px 2px}
 }
+
+/* ===== aspecto "aparato de los 70": cuerpo mostaza, botones café, luces ámbar ===== */
+@font-face{font-family:"Inter";src:url("fonts/Inter-SemiBold.otf") format("opentype");font-weight:600;font-display:swap}
+@font-face{font-family:"InterDisplay";src:url("fonts/InterDisplay-Black.otf") format("opentype");font-weight:900;font-display:swap}
+@font-face{font-family:"LirioMono";src:url("fonts/DejaVuSansMono-Bold.ttf") format("truetype");font-display:swap}
+:root{--ink:#241b13;--cream:#f3e8d2;--body:#d2a034;--bodylo:#bd8b24;--well:#c4932a;--led:#ffb238;--red:#e2482a;--pink:#ffb238;--orange:#f08a24;--lemon:#ffc857;--turq:#f2c46a;--purple:#d98b3a;--lime:#ffb238;--sky:#f5d08c}
+body{font-family:"Inter",system-ui,sans-serif;font-weight:600;background:#16110c}
+#bg{display:none}
+.wrap{background:linear-gradient(#dcab3d,var(--bodylo));border-radius:30px;box-shadow:inset 0 1px 0 #fff5,0 0 0 3px #0b0806;margin-top:12px;margin-bottom:12px;padding-top:18px}
+.volver{background:var(--ink);color:var(--cream)}
+.titulo{font-family:"InterDisplay",sans-serif;font-weight:900;font-size:64px;color:var(--ink);text-shadow:none;letter-spacing:-.02em;text-transform:lowercase}
+.sub{background:none;border:0;box-shadow:none;padding:0;font-size:12px;letter-spacing:.32em}
+.pantalla{background:#1b1510;border-radius:14px;box-shadow:0 2px 0 #0004;padding:8px}
+.pantalla-in{background:#050403;border:0;border-radius:6px;background-image:repeating-linear-gradient(#ffffff06 0 1px,transparent 1px 3px)}
+#acorde{font-family:"LirioMono",monospace;font-size:34px;color:#fff4dc;text-shadow:0 0 6px #fff4dc55}
+#subt{font-family:"LirioMono",monospace;font-size:11.5px;color:var(--led);letter-spacing:.06em}
+#led{background:var(--led);right:16px;top:14px;width:8px;height:8px}
+#tag{font-family:"LirioMono",monospace;background:none;border:1.2px solid var(--led);color:var(--led);border-radius:3px;font-size:11px;padding:0 5px;left:16px;top:12px}
+#tag.wtf{background:none;border-color:var(--red);color:var(--red)}
+.lado label{color:var(--ink);letter-spacing:.3em;font-size:11.5px}
+.panel{background:var(--well);border:0;box-shadow:inset 0 2px 3px #0003,inset 0 -1px 0 #fff3;border-radius:16px;padding:20px 14px 14px;margin-top:10px}
+.panel>h2,.panel>h2.osc{top:-22px;left:14px;background:none;border:0;padding:0;color:var(--ink);font-family:"Inter",sans-serif;font-weight:600;font-size:12px;letter-spacing:.3em;text-transform:uppercase}
+.rack{gap:30px 14px}
+.pill,.btn{background:linear-gradient(#3a2d21,var(--ink));color:var(--cream);border:1px solid #000a;border-radius:11px;box-shadow:0 2px 0 #0005;font-weight:600}
+.pill[aria-pressed="true"],.pill.claro[aria-pressed="true"],.btn.on{background:linear-gradient(#ffc562,#f0a028);color:var(--ink);box-shadow:0 0 0 2px #ffb23855,0 2px 0 #0005}
+.btn.rec.on,#lRec.on{background:linear-gradient(#f06a48,var(--red));color:#fff}
+.pills .pill.auto[aria-pressed="true"]{background:var(--cream);color:var(--ink)}
+.pill .k{background:var(--cream);color:var(--ink);top:-6px;right:5px}
+.tog{background:none;border:0;box-shadow:none;color:var(--ink);padding:6px 8px 6px 4px}
+.tog::before{background:#5a4630;border:1.3px solid var(--ink);width:12px;height:12px}
+.tog[aria-pressed="true"]{background:none}
+.tog[aria-pressed="true"]::before{background:var(--led);box-shadow:0 0 0 4px #ffb23859}
+select{background-color:var(--ink);color:var(--cream);border:1px solid #000a;border-radius:10px;box-shadow:0 2px 0 #0004;background-image:linear-gradient(45deg,transparent 50%,var(--led) 50%),linear-gradient(135deg,var(--led) 50%,transparent 50%)}
+select option,select optgroup{background:var(--ink);color:var(--cream)}
+.knob .n{font-size:10.5px;letter-spacing:.02em}
+.knob .v{font-size:11.5px}
+.tempo .num{background:#050403;border:5px solid #1b1510;border-radius:10px;box-shadow:none;font-family:"LirioMono",monospace;color:#fff4dc}
+.tempo .num small{font-family:"Inter";color:var(--led)}
+.tempo .num input{color:#fff4dc}
+.cel{background:#2c2219;border:1px solid #0008}
+.cel.b4{background:#3a2d21}
+.cel.on{background:var(--c2);box-shadow:0 0 0 2px #ffb23844}
+.cel.cur{outline:2px solid var(--cream)}
+.lbar{background:#2c2219}
+.lbar i{background:var(--led)} .lbar.rec i{background:var(--red)}
+.oct{background:none}
+.oct-keys{background:#17110c;border-radius:10px}
+.ok.w{background:var(--cream)} .ok.b{background:var(--ink);border-color:#000}
+.ok .ac{font-family:"LirioMono",monospace;opacity:.85}
+.ok.esc::before{background:var(--led);box-shadow:0 0 0 1.5px var(--ink)}
+.ok.on{background:var(--led)!important}
+#kb{border-radius:10px}
+.ayuda b{background:var(--ink);color:var(--cream)}
+.nota{opacity:.8}
+@media (max-width:640px){.wrap{border-radius:0;margin:0;box-shadow:none} .oct{background:var(--body);border-top:2px solid var(--ink)} .titulo{font-size:54px}}
 </style>
 </head>
 <body>
@@ -277,8 +333,8 @@ select{border:2px solid var(--ink);background:var(--cream);border-radius:999px;p
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
-const COL={ink:'#2a1640',cream:'#fff3d6',pink:'#ff2e88',orange:'#ff8a00',lemon:'#ffe14a',turq:'#00c2c7',purple:'#7b3dff',lime:'#8ad63c',sky:'#4aa3ff'};
-const RAIN=[COL.pink,COL.orange,COL.lemon,COL.lime,COL.turq,COL.sky,COL.purple];
+const COL={ink:'#241b13',cream:'#f3e8d2',pink:'#ffb238',orange:'#f08a24',lemon:'#ffc857',turq:'#f2c46a',purple:'#d98b3a',lime:'#ffb238',sky:'#f5d08c',led:'#ffb238'};
+const RAIN=['#ffb238','#f3e8d2','#f08a24','#ffc857','#ffb238','#f3e8d2','#f08a24'];
 const rainbow=i=>RAIN[((i%7)+7)%7];
 
 /* ---------- parámetros (los mismos del plugin) ---------- */
@@ -394,7 +450,7 @@ async function audio(){
 let pend=false;
 function sendP(){ if(!node||pend)return; pend=true; requestAnimationFrame(()=>{pend=false; node.port.postMessage({t:'p',p:st})}) }
 function changed(k){save(); sendP(); refresh()}
-async function on(k,v){if(await audio())node.port.postMessage({t:'on',k,v})}
+async function on(k,v){if(await audio()){if(pend)node.port.postMessage({t:'p',p:st}); node.port.postMessage({t:'on',k,v})}}
 function off(k){node&&node.port.postMessage({t:'off',k})}
 
 /* ---------- píldoras ---------- */
@@ -441,15 +497,15 @@ function toN(id,v){const [a,b,c]=KN[id]; if(c>0){const sk=Math.log(.5)/Math.log(
 function fromN(id,n){const [a,b,c,,,,isInt]=KN[id]; n=Math.min(1,Math.max(0,n)); let v; if(c>0){const sk=Math.log(.5)/Math.log((c-a)/(b-a)); v=a+(b-a)*Math.pow(n,1/sk)} else v=a+(b-a)*n; return isInt?Math.round(v):v}
 function fmt(id,v){const f=KN[id][3]; if(f==='%')return Math.round(v*100)+'%'; if(f==='ms')return Math.round(v)+' ms'; if(f==='s')return v<1?Math.round(v*1000)+' ms':v.toFixed(2)+' s'; return (v>0&&KN[id][0]<0?'+':'')+v}
 function flower(pos,c){
-  const a0=Math.PI*1.2,a1=Math.PI*2.8,ang=a0+pos*(a1-a0),r=25,cx=28,cy=28,P=(rr,a)=>[cx+rr*Math.sin(a),cy-rr*Math.cos(a)];
+  const a0=Math.PI*1.2,a1=Math.PI*2.8,ang=a0+pos*(a1-a0),r=26,cx=28,cy=28,P=(rr,a)=>[cx+rr*Math.sin(a),cy-rr*Math.cos(a)];
   let s='';
-  for(let i=0;i<8;i++){const pa=i/8*360+11.5; s+=`<ellipse cx="${cx}" cy="${cy-r*0.98+r*0.31}" rx="${r*0.21}" ry="${r*0.31}" transform="rotate(${pa} ${cx} ${cy})" fill="${c}" fill-opacity=".45" stroke="${COL.ink}" stroke-opacity=".85" stroke-width="1.4"/>`}
+  for(let i=0;i<=10;i++){const ta=a0+(a1-a0)*i/10,[x0,y0]=P(r*0.86,ta),[x1,y1]=P(r*(i%5===0?1:0.95),ta); s+=`<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${COL.ink}" stroke-opacity="${i%5===0?0.7:0.35}" stroke-width="1.3"/>`}
   const arc=(from,to)=>{const [x0,y0]=P(r*0.78,from),[x1,y1]=P(r*0.78,to); return `M${x0} ${y0}A${r*0.78} ${r*0.78} 0 ${to-from>Math.PI?1:0} 1 ${x1} ${y1}`};
-  s+=`<path d="${arc(a0,a1)}" fill="none" stroke="${COL.ink}" stroke-width="${r*0.24}" stroke-linecap="round"/>`;
-  if(pos>0.002)s+=`<path d="${arc(a0,ang)}" fill="none" stroke="${c}" stroke-width="${r*0.15}" stroke-linecap="round"/>`;
-  const br=r*0.56; s+=`<circle cx="${cx+2}" cy="${cy+3}" r="${br}" fill="${COL.ink}"/><circle cx="${cx}" cy="${cy}" r="${br}" fill="${c}" stroke="${COL.ink}" stroke-width="2"/><circle cx="${cx}" cy="${cy}" r="${br*0.55}" fill="${COL.cream}"/>`;
-  const [tx,ty]=P(br*0.78,ang),[mx,my]=P(br*0.5,ang);
-  s+=`<line x1="${cx}" y1="${cy}" x2="${mx}" y2="${my}" stroke="${COL.ink}" stroke-width="2.4" stroke-linecap="round"/><circle cx="${tx}" cy="${ty}" r="${r*0.1}" fill="${COL.ink}"/>`;
+  s+=`<path d="${arc(a0,a1)}" fill="none" stroke="${COL.ink}" stroke-opacity=".25" stroke-width="2.4" stroke-linecap="round"/>`;
+  if(pos>0.002)s+=`<path d="${arc(a0,ang)}" fill="none" stroke="${COL.led}" stroke-width="2.4" stroke-linecap="round"/>`;
+  const br=r*0.62; s+=`<defs><linearGradient id="kg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3027"/><stop offset="1" stop-color="#100c08"/></linearGradient></defs><circle cx="${cx+1}" cy="${cy+2.5}" r="${br}" fill="#0005"/><circle cx="${cx}" cy="${cy}" r="${br}" fill="url(#kg)"/><circle cx="${cx}" cy="${cy}" r="${br*0.8}" fill="none" stroke="#4a3e33" stroke-width="1"/>`;
+  const [ix,iy]=P(br*0.3,ang),[tx,ty]=P(br*0.88,ang);
+  s+=`<line x1="${ix}" y1="${iy}" x2="${tx}" y2="${ty}" stroke="${COL.cream}" stroke-width="2.4" stroke-linecap="round"/>`;
   return `<svg viewBox="0 0 56 56" aria-hidden="true">${s}</svg>`;
 }
 const knobEls={};
@@ -559,13 +615,13 @@ let KL=null;
 function drawKb(){
   if(!KL)KL=kbLayout(); const {w,h,dpr}=KL, c=kb.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0);
   const sounding=new Set(ui.notes||[]); held.forEach(n=>sounding.add(n));
-  c.fillStyle=COL.ink; c.beginPath(); c.roundRect(0,0,w,h,14); c.fill();
+  c.fillStyle='#17110c'; c.beginPath(); c.roundRect(0,0,w,h,10); c.fill();
   const x0=8,y0=7,W=w-16,H=h-14; let whites=0; for(let m=KLO;m<=KHI;m++)if(!isBlack(m))whites++; const kw=W/whites;
   let wi=0; c.font='10px Righteous, sans-serif'; c.textAlign='center';
-  for(let m=KLO;m<=KHI;m++)if(!isBlack(m)){c.fillStyle=sounding.has(m)?rainbow(m%12):COL.cream; c.beginPath(); c.roundRect(x0+wi*kw,y0,kw-2,H,5); c.fill();
-    if(m%12===0){c.fillStyle='#2a164088'; c.fillText('C'+(m/12-1),x0+wi*kw+kw/2-1,y0+H-4)} wi++}
+  for(let m=KLO;m<=KHI;m++)if(!isBlack(m)){c.fillStyle=sounding.has(m)?COL.led:COL.cream; c.beginPath(); c.roundRect(x0+wi*kw,y0,kw-2,H,5); c.fill();
+    if(m%12===0){c.fillStyle='#241b1388'; c.fillText('C'+(m/12-1),x0+wi*kw+kw/2-1,y0+H-4)} wi++}
   wi=0;
-  for(let m=KLO;m<=KHI;m++){if(!isBlack(m)){wi++; continue} c.fillStyle=sounding.has(m)?rainbow(m%12):'#3d2a55'; c.beginPath(); c.roundRect(x0+wi*kw-kw*0.32,y0,kw*0.62,H*0.6,4); c.fill(); c.strokeStyle=COL.ink; c.lineWidth=1.5; c.stroke()}
+  for(let m=KLO;m<=KHI;m++){if(!isBlack(m)){wi++; continue} c.fillStyle=sounding.has(m)?COL.led:COL.ink; c.beginPath(); c.roundRect(x0+wi*kw-kw*0.32,y0,kw*0.62,H*0.6,4); c.fill(); c.strokeStyle=COL.ink; c.lineWidth=1.5; c.stroke()}
 }
 function noteAt(x,y){const {w,h}=KL, x0=8,y0=7,W=w-16,H=h-14; let whites=0; for(let m=KLO;m<=KHI;m++)if(!isBlack(m))whites++; const kw=W/whites;
   if(y-y0<H*0.6){let wi=0; for(let m=KLO;m<=KHI;m++){if(!isBlack(m)){wi++; continue} const bx=x0+wi*kw-kw*0.32; if(x>=bx&&x<=bx+kw*0.62)return m}}
@@ -641,7 +697,7 @@ async function midi(){
   }catch(e){$('midiSt').textContent='Teclado MIDI: el navegador no dio permiso.'}
 }
 function msg(e){const [s,a,b]=e.data, c=s&0xf0;
-  if(c===0x90&&b>0){held.add(a); node.port.postMessage({t:'on',k:a,v:b/127})}
+  if(c===0x90&&b>0){held.add(a); if(pend)node.port.postMessage({t:'p',p:st}); node.port.postMessage({t:'on',k:a,v:b/127})}
   else if(c===0x80||(c===0x90&&b===0)){held.delete(a); node.port.postMessage({t:'off',k:a})}
   else if(c===0xB0&&a===64)node.port.postMessage({t:'sus',on:b>=64});
   else if(c===0xB0&&a===1)node.port.postMessage({t:'mod',v:b/127});
@@ -677,19 +733,12 @@ function frame(){
 }
 
 /* ---------- fondo y flor (op-art) ---------- */
-function drawBg(){
-  const c=$('bg'), dpr=Math.min(2,devicePixelRatio||1), W=innerWidth, H=innerHeight; c.width=W*dpr; c.height=H*dpr; const g=c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
-  g.fillStyle=COL.purple; g.fillRect(0,0,W,H); const N=16;
-  for(let k=N;k>=0;k--){const base=-60+k*(H+120)/N; g.beginPath(); g.moveTo(0,H+10); g.lineTo(0,base);
-    for(let x=0;x<=W+20;x+=16)g.lineTo(x,base+26*Math.sin(x*0.008+k*0.55)+0.18*x*(1080/Math.max(W,600)));
-    g.lineTo(W+20,H+10); g.closePath(); g.fillStyle=rainbow(k); g.fill(); g.strokeStyle='#2a164059'; g.lineWidth=2; g.stroke()}
-}
-function drawFlor(t){
-  const c=$('flor'), g=c.getContext('2d'), s=c.width/120; g.setTransform(s,0,0,s,0,0); g.clearRect(0,0,120,120);
-  for(let i=9;i>=0;i--){const rr=4+i*5.6; g.beginPath(); g.arc(60,60,rr,0,7); g.fillStyle=i%2?COL.cream:COL.ink; g.fill()}
-  const rot=t*0.36;
-  for(let i=0;i<10;i++){const a=rot+i/10*Math.PI*2; g.save(); g.translate(60,60); g.rotate(a); g.beginPath(); g.ellipse(0,-24,8.5,15,0,0,7); g.fillStyle=rainbow(i); g.fill(); g.lineWidth=2; g.strokeStyle=COL.ink; g.stroke(); g.restore()}
-  g.beginPath(); g.arc(60,60,11,0,7); g.fillStyle=COL.lemon; g.fill(); g.stroke();
+function drawBg(){}
+function drawFlor(){
+  const c=$('flor'), g=c.getContext('2d'), sc=c.width/120; g.setTransform(sc,0,0,sc,0,0); g.clearRect(0,0,120,120);
+  g.beginPath(); g.arc(60,60,58,0,7); g.fillStyle='#0000001f'; g.fill();
+  for(let ring=1;ring<=5;ring++){const rr=54*ring/5.3, n=ring*7; for(let i=0;i<n;i++){const a=i/n*Math.PI*2+ring*0.3; g.beginPath(); g.arc(60+rr*Math.sin(a),60-rr*Math.cos(a),2.6,0,7); g.fillStyle='#241b13d9'; g.fill()}}
+  g.beginPath(); g.arc(60,60,4.5,0,7); g.fillStyle=`rgba(255,178,56,${0.25+0.75*led})`; g.fill();
 }
 
 drawBg(); refresh(); drawKb(); requestAnimationFrame(frame);
