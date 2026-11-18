@@ -353,6 +353,7 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
           <li><a href="#lirio"><b>Lirio</b><small>Máquina de acordes</small><em>Windows, Mac<br>y navegador</em></a></li>
           <li><a href="#niebla"><b>Niebla Studio</b><small>Sintetizador ambiental</small><em>Windows, Mac<br>y navegador</em></a></li>
           <li><a href="#desarmador-stems"><b>Desarmador Stems</b><small>Separa canciones en pistas con IA</small><em>Windows y Mac</em></a></li>
+          <li><a href="#rearmador"><b>Rearmador</b><small>Tu batería grabada, con sonido de estudio</small><em>Windows</em></a></li>
           <li><a href="#bowery"><b>Bowery NY Crush</b><small>Compresor paralelo</small><em>Windows</em></a></li>
           <li><a href="#desarmador"><b>Desarmador</b><small>Separa una batería grabada con un micrófono</small><em>Windows</em></a></li>
           <li><a href="#limpiador"><b>Limpiador</b><small>Limpia pistas separadas por IA</small><em>Windows y Mac</em></a></li>
@@ -435,8 +436,8 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
 
 <section class="grupo" id="separar" aria-labelledby="t-sep">
   <div class="cont">
-    <h2 id="t-sep">Separar canciones</h2>
-    <p>Para sacar las pistas de un tema ya mezclado: practicar, hacer covers, remezclar o estudiar cómo está grabado.</p>
+    <h2 id="t-sep">Separar y rearmar</h2>
+    <p>Para sacar las pistas de un tema ya mezclado (practicar, hacer covers, remezclar, estudiar cómo está grabado) y para hacer sonar tu batería grabada como una de estudio.</p>
 
     <article class="ficha" id="desarmador-stems">
       <figure class="pantalla">
@@ -457,6 +458,26 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
           <a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Desarmador-Stems-1.1-Mac-Intel.zip" download><b>Descargar para Mac con Intel</b><span>Zip, 497 MB</span></a>
         </div>
         <p class="nota">Versión 1.1 · Windows 10/11 de 64 bits. Tarda unos minutos por tema, según tu compu. Mac con chip M (M1 a M4) y macOS 14 o más nuevo, o Mac con Intel y macOS 11 o más nuevo (en Intel tarda más y se elige el archivo con clic, sin arrastrar). Modelos libres: Demucs (Meta) y DrumSep (aufr33 y jarredou).</p>
+      </div>
+    </article>
+
+    <article class="ficha" id="rearmador">
+      <figure class="pantalla">
+        <img src="img/rearmador.webp" width="940" height="620" loading="lazy" alt="Interfaz de Rearmador: parche de cuero con las seis piezas de la batería ya rearmadas (bombo, redoblante, tom aéreo, tom de piso, hi-hat y ride), y panel naranja para elegir el kit y el botón Rearmar">
+      </figure>
+      <div>
+        <h3>Rearmador</h3>
+        <p class="que">Te grabás tocando la batería, aunque sea con el celular, y te la devuelve sonando como una batería grabada en estudio.</p>
+        <p class="desc">Separa cada pieza, detecta cada golpe con su intensidad y lo vuelve a tocar con un kit de samples profesional: lo que tocaste, con el groove y las ghost notes, pero con otro sonido. Te deja dos carpetas: tus pistas reales separadas y las mismas tocadas con samples, más el MIDI. Corre en tu compu, sin internet.</p>
+        <ul class="trae">
+          <li>Seis pistas: bombo, redoblante, tom aéreo, tom de piso, hi-hat (cerrado y abierto) y ride, más la sala aparte</li>
+          <li>Dos kits: uno clásico de los 60, cálido y con aire, y uno grande de los 80, gordo y profundo</li>
+          <li>Acepta audio y video del celular (M4A, MP4, MOV), WAV o MP3; también un ensayo con la banda entera</li>
+        </ul>
+        <div class="bajar">
+          <a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Rearmador-Instalador-1.0.exe" download><b>Descargar para Windows</b><span>Instalador, 578 MB</span></a>
+        </div>
+        <p class="nota">Versión 1.0, primera versión · Windows 10/11 de 64 bits. Una toma de un minuto tarda unos dos minutos. Con el celular la intensidad de cada golpe sale menos fina que con un micrófono, y la campana del ride todavía la toca como ride. Detección de golpes con ADTOF (Zehren, Alunno y Bientinesi, uso no comercial), separación con DrumSep (aufr33 y jarredou), kits libres de SM Drums y Karoryfer.</p>
       </div>
     </article>
   </div>
@@ -567,7 +588,7 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
       <div>
         <h3>Windows</h3>
         <ol>
-          <li><strong>Instaladores (Lirio, Niebla y Desarmador Stems):</strong> abrí el .exe. Si aparece "Windows protegió su PC", tocá "Más información" y después "Ejecutar de todas formas".</li>
+          <li><strong>Instaladores (Lirio, Niebla, Desarmador Stems y Rearmador):</strong> abrí el .exe. Si aparece "Windows protegió su PC", tocá "Más información" y después "Ejecutar de todas formas".</li>
           <li><strong>Plugins en zip:</strong> descomprimí y copiá la carpeta que termina en <code>.vst3</code> en <code>C:\Program Files\Common Files\VST3\</code></li>
           <li>Abrí tu DAW y buscá plugins nuevos. Aparecen con el fabricante Saavedrismo.</li>
         </ol>
