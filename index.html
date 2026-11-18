@@ -352,6 +352,7 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
         <ul>
           <li><a href="#lirio"><b>Lirio</b><small>Máquina de acordes</small><em>Windows, Mac<br>y navegador</em></a></li>
           <li><a href="#niebla"><b>Niebla Studio</b><small>Sintetizador ambiental</small><em>Windows, Mac<br>y navegador</em></a></li>
+          <li><a href="#desarmador-stems"><b>Desarmador Stems</b><small>Separa canciones en pistas con IA</small><em>Windows</em></a></li>
           <li><a href="#bowery"><b>Bowery NY Crush</b><small>Compresor paralelo</small><em>Windows</em></a></li>
           <li><a href="#desarmador"><b>Desarmador</b><small>Separa una batería grabada con un micrófono</small><em>Windows</em></a></li>
           <li><a href="#hurlingham"><b>Hurlingham 810</b><small>Equipo valvular de bajo</small><em>Windows</em></a></li>
@@ -426,6 +427,33 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
           <a class="btn sec" href="niebla/?live=1"><b>Modo en vivo en el navegador</b><span>Para pantalla grande</span></a>
         </div>
         <p class="nota">Versión 1.1. El programa arranca siempre con el sonido de fábrica (conserva tus knobs MIDI y tu interfaz de audio). La versión del navegador funciona mejor en Chrome o Edge (el teclado MIDI necesita uno de esos). Usá auriculares si vas a usar el micrófono.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="grupo" id="separar" aria-labelledby="t-sep">
+  <div class="cont">
+    <h2 id="t-sep">Separar canciones</h2>
+    <p>Para sacar las pistas de un tema ya mezclado: practicar, hacer covers, remezclar o estudiar cómo está grabado.</p>
+
+    <article class="ficha" id="desarmador-stems">
+      <figure class="pantalla">
+        <img src="img/desarmador-stems.webp" width="940" height="620" loading="lazy" alt="Interfaz de Desarmador Stems: plano azul con las formas de onda de batería, bajo, guitarra y resto, y panel con lámparas para elegir pistas y el botón Desarmar la batería">
+      </figure>
+      <div>
+        <h3>Desarmador Stems</h3>
+        <p class="que">Separa una canción mezclada en batería, bajo, guitarra, voz, piano y otros. Y la batería, en bombo, redoblante, toms y platillos.</p>
+        <p class="desc">Cargás el tema, prendés las pistas que querés y tocás Desarmar. Cuando termina, con un clic desarmás la batería que sacó, ahí mismo. Usa inteligencia artificial y corre en tu compu, sin internet. Las pistas quedan alineadas con el original para arrastrarlas a tu DAW.</p>
+        <ul class="trae">
+          <li>Dos modos: mezcla en seis pistas, y batería en cuatro piezas (o hi-hat, ride y crash por separado)</li>
+          <li>Limpieza automática de cada pista (EQ y compuerta), y además guarda las versiones crudas</li>
+          <li>WAV, FLAC, MP3, AIFF u OGG; podés cargar varias canciones de una</li>
+        </ul>
+        <div class="bajar">
+          <a class="btn" href="https://github.com/nikokubrick/saavedrismo/releases/download/descargas/Desarmador-Stems-Instalador-1.1.exe" download><b>Descargar para Windows</b><span>Instalador, 370 MB</span></a>
+        </div>
+        <p class="nota">Versión 1.1 · Windows 10/11 de 64 bits. Tarda unos minutos por tema, según tu compu. Modelos libres: Demucs (Meta) y DrumSep (aufr33 y jarredou). La versión para Mac está en camino.</p>
       </div>
     </article>
   </div>
@@ -515,7 +543,7 @@ footer p{margin:0 0 12px;color:var(--tinta-2);font-size:16.5px;max-width:36em}
       <div>
         <h3>Windows</h3>
         <ol>
-          <li><strong>Instaladores (Lirio y Niebla):</strong> abrí el .exe. Si aparece "Windows protegió su PC", tocá "Más información" y después "Ejecutar de todas formas".</li>
+          <li><strong>Instaladores (Lirio, Niebla y Desarmador Stems):</strong> abrí el .exe. Si aparece "Windows protegió su PC", tocá "Más información" y después "Ejecutar de todas formas".</li>
           <li><strong>Plugins en zip:</strong> descomprimí y copiá la carpeta que termina en <code>.vst3</code> en <code>C:\Program Files\Common Files\VST3\</code></li>
           <li>Abrí tu DAW y buscá plugins nuevos. Aparecen con el fabricante Saavedrismo.</li>
         </ol>
