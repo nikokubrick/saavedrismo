@@ -10,3 +10,4 @@ c7a5b345b601a1b3817a5c4c2401aed71264cc63e8dc3abab352c1d6578becb4  Niebla-Live-In
 5b4f2ec80818263723b6a6aa83af5647f5cac2bf9dcb416d4493ecef781a9fc4  Niebla-Studio-1.1.0-Mac.zip
 d338dc47fb8dff5db49442067c4e7c7a515fc0cd17299fde3381485c6db7f064  Niebla-Studio-Instalador-1.1.0.exe
 f587391807610da3ff3479125cbe447f8dd3f7fff18d4fd8d3856fb6dce39cdf  Desarmador-Stems-Instalador-1.1.exe
+33b81e185e876283e19b2b09691939b438c5c38af999a63b319911d50de3134c  Limpiador-VST3-Windows.zip
