@@ -14,3 +14,4 @@ f587391807610da3ff3479125cbe447f8dd3f7fff18d4fd8d3856fb6dce39cdf  Desarmador-Ste
 e5678a09bb02894fbc6af15f3eec9bb7d31c46251d97e80d86dc975004acab3d  Limpiador-Mac.zip
 151d5fddbe312bc2f3bfe378341dc70a1f8c8a69f6b47a18e069d5acd7b9a3cf  Desarmador-Stems-1.1-Mac-AppleSilicon.zip
 5f35d92a4fa8c94c19b2e0b373bb3ec1477b8fce30617fabb453330f07def207  Desarmador-Stems-1.1-Mac-Intel.zip
+8789675a6b7c17071949bff23ed8c4b68d2e53d53c26c0bc47557421114ea291  Rearmador-Instalador-1.0.exe
